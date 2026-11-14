@@ -132,10 +132,14 @@ def fig3_decomposition():
     ax.set_xticks(x)
     ax.set_xticklabels(models)
     ax.set_ylabel("SRCC")
-    ax.set_ylim(0, 1.32)
+    ax.set_ylim(0, 1.06)
     ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.legend(frameon=False, ncol=1, loc="upper left", fontsize=7,
-              handlelength=1.2, borderaxespad=0.2)
+    # legend above the axes: the between-generator bars reach 1.0, so any
+    # in-axes placement lands on top of them
+    ax.legend(frameon=False, ncol=3, loc="lower center",
+              bbox_to_anchor=(0.5, 1.01), fontsize=6.5, handlelength=1.0,
+              columnspacing=1.0, borderaxespad=0.1)
+    fig.subplots_adjust(top=0.84)
     fig.savefig(os.path.join(OUT, "fig3_decomposition.png"))
     plt.close(fig)
 

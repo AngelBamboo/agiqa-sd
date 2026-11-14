@@ -66,6 +66,7 @@ def main():
     ap.add_argument("--root", default="")
     ap.add_argument("--size", type=int, default=224)
     ap.add_argument("--out", default="")
+    ap.add_argument("--dump", default="", help="write per-image predictions to this CSV")
     args = ap.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -93,6 +94,14 @@ def main():
         if sel.sum() > 20:
             per[g] = {"n": int(sel.sum()),
                       "srcc": float(stats.spearmanr(gts[sel], preds[sel]).statistic)}
+    if args.dump:
+        with open(args.dump, "w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["name", "generator", "mos", "pred"])
+            for (path, _, _), p, t, gg in zip(ds.items, preds, gts, gens):
+                w.writerow([os.path.basename(path), gg, float(t), float(p)])
+        print("wrote", args.dump)
+
     label = "AGIQA-1K" if args.dataset == "1k" else "AIGCIQA2023"
     res = {"dataset": label, "n": len(ds), **m, "per_generator": per,
            "mean_over_generators": float(np.mean([v["srcc"] for v in per.values()]))
