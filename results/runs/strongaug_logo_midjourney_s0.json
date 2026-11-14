@@ -1,0 +1,20 @@
+{
+  "protocol": "logo",
+  "holdout": "midjourney",
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": true,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 0,
+  "epochs": 20,
+  "n_train": 2390,
+  "n_test": 592,
+  "params": 11374535,
+  "srcc": 0.5977027979953075,
+  "plcc": 0.62577262262564,
+  "krcc": 0.42359745885521277,
+  "seconds": 102.1
+}

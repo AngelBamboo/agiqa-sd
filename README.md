@@ -69,6 +69,7 @@ coop_agiqa.py           CoOp-style prompt learning on frozen CLIP
 nested_ridge.py         ridge readout with nested alpha selection (3K and 2023)
 alpha_sweep.py          sensitivity of the ridge readout to its penalty
 reliability.py          split-half reliability and Cronbach alpha of the 2023 MOS
+probe.py                linear probe: how decodable is the generator from the features
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
 source_only.py          nearest-generator-centroid control (no quality signal)
 score_baselines.py      NIQE / BRISQUE / MUSIQ / CLIP-IQA / TOPIQ reference scores
@@ -79,7 +80,7 @@ cross_eval.py           cross-database transfer
 make_figs.py            regenerate every figure from results/runs/
 
 results/summary.csv     the main table above, machine readable
-results/runs/           one JSON record per experiment (60 files)
+results/runs/           one JSON record per experiment (116 files)
 results/predictions/    per-image predictions (12 CSV files)
 data/                   put the datasets here (not shipped, see below)
 figs/                   created by make_figs.py
@@ -171,6 +172,19 @@ python nested_ridge.py                    # nested alpha selection, all six fold
 python alpha_sweep.py                     # penalty sensitivity analysis
 for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python source_only.py --holdout "$g" --out auto   # source-inference control
+done
+```
+
+`train.py` defaults to the 20-epoch budget used for every ResNet-18 number in the
+paper. The four ResNet debiasing variants of Table 12 use the same folds with one
+flag added:
+
+```bash
+for g in sd1.5 midjourney glide AttnGAN xl2.2 DALLE2; do
+  python train.py --protocol logo --holdout "$g" --normalize source   # source-wise target normalisation
+  python train.py --protocol logo --holdout "$g" --strong_aug         # heavy augmentation
+  python train.py --protocol logo --holdout "$g" --balanced --rank_weight 0.5   # pairwise rank + balanced batches
+  python train.py --protocol logo --holdout "$g" --adv 1.0            # adversarial (gradient reversal)
 done
 ```
 
