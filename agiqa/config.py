@@ -32,3 +32,7 @@ FIGURES = _path("AGIQA_FIGURES", "figs")
 
 CLIP_3K = os.path.join(FEATURES, "agiqa3k_ViT-B-32_openai.npy")
 CLIP_2023 = os.path.join(FEATURES, "aigciqa2023_ViT-B-32_openai.npy")
+
+# output directories are created on import so no script has to guess
+for _d in (FEATURES, RUNS, FIGURES):
+    os.makedirs(_d, exist_ok=True)
