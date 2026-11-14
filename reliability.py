@@ -1,96 +1,75 @@
-"""Split-half reliability of the five-rater MOS in AIGCIQA2023.
+"""Attainable ceiling on correlation, from the released per-image rating spread.
 
-The five individual ratings released with the database are split into a group of
-two and a group of three; the two group means are correlated across images and
-the result is corrected to the full five-rater mean with the Spearman-Brown
-formula
+AGIQA-3K reports how many people took part in the subjective experiment (21) and
+releases, for every image, the mean and the standard deviation of its quality
+ratings. Neither database releases the individual ratings.
 
-    rho_5 = 2 * r_2v3 / (1 + r_2v3)
+Under a one-way random-effects model with k raters per image,
 
-The square root of that reliability is the ceiling on the correlation any model
-can reach with the five-rater mean, given that the images themselves are fixed.
+    MSB = k * Var(image means)          (between-image mean square)
+    MSW = mean over images of SD_i^2    (within-image mean square)
+
+and the reliability of the k-rater mean is (MSB - MSW) / MSB. Its square root is
+the ceiling on the correlation any predictor of the images can reach with that
+mean, given a linear, additive measurement-error model. The relation is exact
+for Pearson correlation and approximate for Spearman.
+
+    python reliability.py
+    python reliability.py --k 11,21,31     # sensitivity to the rater count
 """
 import argparse
-import csv
 import json
 import os
 
 import numpy as np
-from scipy import stats
+import pandas as pd
 
 import agiqa.config as cfg
 
-CSV = os.path.join(cfg.DATA_2023, "AIGIQA2023plus.csv")
 
-
-def load():
-    """Returns generator labels and an (n_images, 5) matrix of integer ratings."""
-    rows = None
-    for enc in ("utf-8", "gbk", "latin-1"):
-        try:
-            rows = list(csv.reader(open(CSV, encoding=enc)))[1:]
-            break
-        except UnicodeDecodeError:
-            continue
-    rows = [r for r in rows if len(r) >= 8]
-    gens = [r[2] for r in rows]
-    scores = np.array([[float(x) for x in r[3:8]] for r in rows])
-    # the release contains a small number of out-of-range entries (a "11" on a
-    # 1-5 scale); clip them to the scale rather than dropping the image
-    n_bad = int((scores > 5).sum())
-    if n_bad:
-        print(f"clipped {n_bad} out-of-range rating(s) to the 1-5 scale")
-        scores = np.clip(scores, 0, 5)
-    return gens, scores
-
-
-def spearman_brown(r):
-    return 2 * r / (1 + r)
-
-
-def cronbach_alpha(X):
-    """Reliability of the mean of the columns of X, without a split.
-
-    Split-half depends on how the five raters are divided; alpha does not, so it
-    is reported alongside the 2-vs-3 estimate as a partition-free check.
-    """
-    k = X.shape[1]
-    return k / (k - 1) * (1 - X.var(axis=0, ddof=1).sum() / X.sum(axis=1).var(ddof=1))
+def icc_k(mos, sd, k):
+    """Reliability of the mean of k raters, one-way random effects."""
+    msb = k * np.var(mos, ddof=1)
+    msw = np.mean(np.asarray(sd, dtype=float) ** 2)
+    if msb <= msw:
+        return float("nan")
+    return float((msb - msw) / msb)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--reverse", action="store_true",
-                    help="swap the two/three split (three first) as a robustness check")
+    ap.add_argument("--k", default="21", help="raters per image; 21 is the number "
+                                              "reported for AGIQA-3K")
     args = ap.parse_args()
+    ks = [int(v) for v in args.k.split(",")]
 
-    gens, scores = load()
-    gens = np.array(gens)
-    if args.reverse:
-        a, b = scores[:, :3].mean(1), scores[:, 3:].mean(1)
-    else:
-        a, b = scores[:, :2].mean(1), scores[:, 2:].mean(1)
+    path = os.path.join(cfg.DATA_3K, "data.csv")
+    df = pd.read_csv(path)
+    df["gen"] = df["name"].str.split("_").str[0]
 
     out = {}
-    print(f"{'generator':18s} {'n':>5s} {'2v3 r':>7s} {'rho_5':>7s} {'alpha':>7s} {'ceil_a':>7s}")
-    for g in sorted(set(gens)):
-        sel = gens == g
-        if sel.sum() < 30:
-            continue
-        r = float(stats.pearsonr(a[sel], b[sel]).statistic)
-        rho = float(spearman_brown(r))
-        al = float(cronbach_alpha(scores[sel]))
-        out[g] = {"n": int(sel.sum()), "r_2v3": r, "rho_5": rho, "ceiling": float(np.sqrt(rho)),
-                  "alpha": al, "ceiling_alpha": float(np.sqrt(al))}
-        print(f"{g:18s} {sel.sum():5d} {r:7.3f} {rho:7.3f} {al:7.3f} {np.sqrt(al):7.3f}")
+    print(f"{'generator':11s} {'n':>5s} {'MOS':>5s} {'rater SD':>8s} "
+          + " ".join(f"{'rho@k=' + str(k):>9s}" for k in ks)
+          + " " + " ".join(f"{'ceil@' + str(k):>8s}" for k in ks))
+    for g, s in df.groupby("gen"):
+        rels = {k: icc_k(s["mos_quality"].values, s["std_quality"].values, k) for k in ks}
+        out[g] = {"n": int(len(s)), "mos_mean": float(s["mos_quality"].mean()),
+                  "rater_sd": float(s["std_quality"].mean()),
+                  **{f"rho_k{k}": rels[k] for k in ks},
+                  **{f"ceiling_k{k}": float(np.sqrt(rels[k])) for k in ks}}
+        print(f"{g:11s} {len(s):5d} {s['mos_quality'].mean():5.2f} "
+              f"{s['std_quality'].mean():8.3f} "
+              + " ".join(f"{rels[k]:9.3f}" for k in ks)
+              + " " + " ".join(f"{np.sqrt(rels[k]):8.3f}" for k in ks))
 
-    rhos = [v["rho_5"] for v in out.values()]
-    print(f"\nreliability {min(rhos):.2f}-{max(rhos):.2f} (mean {np.mean(rhos):.2f}); "
-          f"ceiling {np.sqrt(min(rhos)):.2f}-{np.sqrt(max(rhos)):.2f}")
+    main_k = ks[1] if len(ks) > 1 else ks[0]
+    rels = [v[f"rho_k{main_k}"] for v in out.values()]
+    print(f"\nk={main_k}: reliability {min(rels):.3f}-{max(rels):.3f}, "
+          f"ceiling {np.sqrt(min(rels)):.3f}-{np.sqrt(max(rels)):.3f}")
 
-    name = "reliability_reverse.json" if args.reverse else "reliability.json"
-    json.dump(out, open(os.path.join(cfg.RUNS, name), "w", encoding="utf-8"), indent=2)
-    print("wrote", name)
+    json.dump({"raters": ks, "per_generator": out},
+              open(os.path.join(cfg.RUNS, "reliability.json"), "w", encoding="utf-8"), indent=2)
+    print("wrote reliability.json")
 
 
 if __name__ == "__main__":

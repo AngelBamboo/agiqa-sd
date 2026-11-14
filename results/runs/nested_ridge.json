@@ -1,38 +1,47 @@
 {
-  "sd1.5": {
-    "n_test": 1200,
-    "alpha_selected": 1000,
-    "inner_srcc": 0.9066566349765082,
-    "srcc": 0.5444743517998355
+  "logo": {
+    "AttnGAN": {
+      "n_test": 300,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.6072368239801156,
+      "srcc": 0.45379538417599224
+    },
+    "DALLE2": {
+      "n_test": 290,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.5801333300420477,
+      "srcc": 0.506949182846605
+    },
+    "glide": {
+      "n_test": 300,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.5502610350646382,
+      "srcc": 0.7485480833860131
+    },
+    "midjourney": {
+      "n_test": 592,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.5215859526562143,
+      "srcc": 0.7544526531691156
+    },
+    "sd1.5": {
+      "n_test": 1200,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.5817257326441645,
+      "srcc": 0.5444743517998355
+    },
+    "xl2.2": {
+      "n_test": 300,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.5944465892684472,
+      "srcc": 0.4685488224276405
+    }
   },
-  "AttnGAN": {
-    "n_test": 300,
+  "logo_mean": 0.5794614129675336,
+  "random": {
+    "seed": 0,
     "alpha_selected": 1000,
-    "inner_srcc": 0.7937141912820328,
-    "srcc": 0.45379538417599224
-  },
-  "glide": {
-    "n_test": 300,
-    "alpha_selected": 1000,
-    "inner_srcc": 0.802317325302084,
-    "srcc": 0.7485480833860131
-  },
-  "xl2.2": {
-    "n_test": 300,
-    "alpha_selected": 1000,
-    "inner_srcc": 0.846444784160984,
-    "srcc": 0.4685488224276405
-  },
-  "DALLE2": {
-    "n_test": 290,
-    "alpha_selected": 1000,
-    "inner_srcc": 0.8555357992811645,
-    "srcc": 0.506949182846605
-  },
-  "midjourney": {
-    "n_test": 592,
-    "alpha_selected": 1000,
-    "inner_srcc": 0.8358607134173454,
-    "srcc": 0.7544526531691156
+    "inner_srcc": 0.5745111823530125,
+    "srcc": 0.8629122784146098
   }
 }

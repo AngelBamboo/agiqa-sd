@@ -72,14 +72,28 @@ def fit_predict(Xtr, ytr, Xte, alpha):
     return m.predict(sc.transform(Xte))
 
 
-def select_alpha(X, y, tr_idx, prompts, repeats=3):
-    """Mean inner-validation SRCC for each alpha, over prompt-grouped splits."""
+def select_alpha(X, y, tr_idx, prompts, gens, repeats=3, inner="source"):
+    """Mean inner-validation SRCC for each alpha.
+
+    inner="source" holds out one *training generator* at a time, which matches
+    the question the outer loop asks (transfer to a generator never seen); it is
+    the default. inner="prompt" keeps every generator in both halves and only
+    separates prompts, and is kept for comparison.
+    """
     scores = {a: [] for a in ALPHAS}
-    for seed in range(repeats):
-        itr, iva = prompt_split(tr_idx, prompts, seed=seed)
-        for a in ALPHAS:
-            p = fit_predict(X[itr], y[itr], X[iva], a)
-            scores[a].append(stats.spearmanr(p, y[iva]).statistic)
+    if inner == "source":
+        for g in sorted(set(gens[tr_idx])):
+            itr = tr_idx[gens[tr_idx] != g]
+            iva = tr_idx[gens[tr_idx] == g]
+            for a in ALPHAS:
+                p = fit_predict(X[itr], y[itr], X[iva], a)
+                scores[a].append(stats.spearmanr(p, y[iva]).statistic)
+    else:
+        for seed in range(repeats):
+            itr, iva = prompt_split(tr_idx, prompts, seed=seed)
+            for a in ALPHAS:
+                p = fit_predict(X[itr], y[itr], X[iva], a)
+                scores[a].append(stats.spearmanr(p, y[iva]).statistic)
     mean_scores = {a: float(np.mean(v)) for a, v in scores.items()}
     return max(mean_scores, key=mean_scores.get), mean_scores
 
@@ -88,6 +102,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset", default="3k", choices=["3k", "2023"])
     ap.add_argument("--seed", type=int, default=0, help="random-split seed")
+    ap.add_argument("--inner", default="source", choices=["source", "prompt"],
+                    help="inner validation grouping; 'source' holds out one training generator")
     args = ap.parse_args()
 
     X, y, g, prompts = load(args.dataset)
@@ -97,7 +113,7 @@ def main():
     for hold in holdouts:
         tr_idx = np.where(g != hold)[0]
         te_idx = np.where(g == hold)[0]
-        best, mean_scores = select_alpha(X, y, tr_idx, prompts)
+        best, mean_scores = select_alpha(X, y, tr_idx, prompts, g, inner=args.inner)
         pred = fit_predict(X[tr_idx], y[tr_idx], X[te_idx], best)
         srcc = float(stats.spearmanr(pred, y[te_idx]).statistic)
         results[hold] = {"n_test": int(len(te_idx)), "alpha_selected": best,
@@ -113,7 +129,7 @@ def main():
     idx = rng.permutation(len(y))
     cut = int(len(y) * 0.8)
     tr_idx, te_idx = np.sort(idx[:cut]), np.sort(idx[cut:])
-    best, mean_scores = select_alpha(X, y, tr_idx, prompts)
+    best, mean_scores = select_alpha(X, y, tr_idx, prompts, g, inner=args.inner)
     pred = fit_predict(X[tr_idx], y[tr_idx], X[te_idx], best)
     random_srcc = float(stats.spearmanr(pred, y[te_idx]).statistic)
     print(f"random split       alpha*={best:6d} inner={mean_scores[best]:.3f} "

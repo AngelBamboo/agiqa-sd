@@ -68,7 +68,7 @@ head_eval.py            linear / MLP readout on frozen CLIP features (WSR, relia
 coop_agiqa.py           CoOp-style prompt learning on frozen CLIP
 nested_ridge.py         ridge readout with nested alpha selection (3K and 2023)
 alpha_sweep.py          sensitivity of the ridge readout to its penalty
-reliability.py          split-half reliability and Cronbach alpha of the 2023 MOS
+reliability.py          ceiling on correlation from the released per-image rating spread
 probe.py                linear probe: how decodable is the generator from the features
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
 source_only.py          nearest-generator-centroid control (no quality signal)
@@ -198,7 +198,7 @@ Generator labels follow the AGIQA-3K release: `sd1.5` = SD 1.5, `xl2.2` = SDXL 2
 python extract_2023.py
 python eval_2023.py --seeds 0,1,2     # random + six LOGO folds, three seeds
 python nested_ridge.py --dataset 2023
-python reliability.py                 # split-half and Cronbach alpha of the MOS
+python reliability.py                 # attainable ceiling from the per-image rating spread
 python cross_eval.py --weights <checkpoint>.pt
 ```
 

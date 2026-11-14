@@ -3,45 +3,45 @@
     "Controlnet": {
       "n_test": 400,
       "alpha_selected": 1000,
-      "inner_srcc": 0.7759633302221433,
+      "inner_srcc": 0.43393115214972366,
       "srcc": 0.4799444996531228
     },
     "DALLE": {
       "n_test": 400,
-      "alpha_selected": 1000,
-      "inner_srcc": 0.7840530878317988,
-      "srcc": 0.28210302636749446
+      "alpha_selected": 300,
+      "inner_srcc": 0.5084403652522828,
+      "srcc": 0.24940357046310804
     },
     "Glide": {
       "n_test": 400,
-      "alpha_selected": 3000,
-      "inner_srcc": 0.6997661030681893,
-      "srcc": 0.35212626328914554
+      "alpha_selected": 1000,
+      "inner_srcc": 0.4833990240480174,
+      "srcc": 0.36593253707835666
     },
     "Lafite": {
       "n_test": 400,
       "alpha_selected": 1000,
-      "inner_srcc": 0.7139435980346356,
+      "inner_srcc": 0.5068684711355385,
       "srcc": 0.24946543415896347
     },
     "Unidiffuser": {
       "n_test": 400,
       "alpha_selected": 1000,
-      "inner_srcc": 0.795532609337542,
+      "inner_srcc": 0.3962103038715245,
       "srcc": 0.6749550934693341
     },
     "stable-diffusion": {
       "n_test": 400,
       "alpha_selected": 1000,
-      "inner_srcc": 0.776203863114771,
+      "inner_srcc": 0.37049796790756,
       "srcc": 0.6961192882455515
     }
   },
-  "logo_mean": 0.4557856008639353,
+  "logo_mean": 0.4526367371780728,
   "random": {
     "seed": 0,
     "alpha_selected": 1000,
-    "inner_srcc": 0.7589073433773098,
+    "inner_srcc": 0.4489110868099164,
     "srcc": 0.8290723918072561
   }
 }
