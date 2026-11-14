@@ -1,0 +1,20 @@
+{
+  "protocol": "logo",
+  "holdout": "glide",
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": false,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 2,
+  "epochs": 20,
+  "n_train": 2682,
+  "n_test": 300,
+  "params": 11374535,
+  "srcc": 0.6938391829660672,
+  "plcc": 0.737795688919741,
+  "krcc": 0.5154727658027227,
+  "seconds": 66.1
+}

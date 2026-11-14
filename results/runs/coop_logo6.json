@@ -1,0 +1,200 @@
+[
+  {
+    "protocol": "logo",
+    "holdout": "sd1.5",
+    "seed": 0,
+    "srcc": 0.5361378974895313,
+    "plcc": 0.6879720687866211,
+    "within": 0.5361378974895313,
+    "per_generator": {
+      "sd1.5": 0.5361378974895313
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "sd1.5",
+    "seed": 1,
+    "srcc": 0.5613926714505628,
+    "plcc": 0.6956660747528076,
+    "within": 0.5613926714505628,
+    "per_generator": {
+      "sd1.5": 0.5613926714505628
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "sd1.5",
+    "seed": 2,
+    "srcc": 0.5398795153659103,
+    "plcc": 0.6723612546920776,
+    "within": 0.5398795153659103,
+    "per_generator": {
+      "sd1.5": 0.5398795153659103
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "AttnGAN",
+    "seed": 0,
+    "srcc": 0.3398712477325591,
+    "plcc": 0.3892536759376526,
+    "within": 0.3398712477325591,
+    "per_generator": {
+      "AttnGAN": 0.3398712477325591
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "AttnGAN",
+    "seed": 1,
+    "srcc": 0.38845164892900724,
+    "plcc": 0.4565700888633728,
+    "within": 0.38845164892900724,
+    "per_generator": {
+      "AttnGAN": 0.38845164892900724
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "AttnGAN",
+    "seed": 2,
+    "srcc": 0.3304676646807321,
+    "plcc": 0.40827476978302,
+    "within": 0.3304676646807321,
+    "per_generator": {
+      "AttnGAN": 0.3304676646807321
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "glide",
+    "seed": 0,
+    "srcc": 0.7175919362231532,
+    "plcc": 0.7147040367126465,
+    "within": 0.7175919362231532,
+    "per_generator": {
+      "glide": 0.7175919362231532
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "glide",
+    "seed": 1,
+    "srcc": 0.7483378571461274,
+    "plcc": 0.738213062286377,
+    "within": 0.7483378571461274,
+    "per_generator": {
+      "glide": 0.7483378571461274
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "glide",
+    "seed": 2,
+    "srcc": 0.6957221849339115,
+    "plcc": 0.7005144953727722,
+    "within": 0.6957221849339115,
+    "per_generator": {
+      "glide": 0.6957221849339115
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "xl2.2",
+    "seed": 0,
+    "srcc": 0.40103326489518926,
+    "plcc": 0.5085253715515137,
+    "within": 0.40103326489518926,
+    "per_generator": {
+      "xl2.2": 0.40103326489518926
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "xl2.2",
+    "seed": 1,
+    "srcc": 0.4179709332185988,
+    "plcc": 0.5196342468261719,
+    "within": 0.4179709332185988,
+    "per_generator": {
+      "xl2.2": 0.4179709332185988
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "xl2.2",
+    "seed": 2,
+    "srcc": 0.429497161182207,
+    "plcc": 0.5292203426361084,
+    "within": 0.429497161182207,
+    "per_generator": {
+      "xl2.2": 0.429497161182207
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "DALLE2",
+    "seed": 0,
+    "srcc": 0.5684089227069951,
+    "plcc": 0.597041130065918,
+    "within": 0.5684089227069951,
+    "per_generator": {
+      "DALLE2": 0.5684089227069951
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "DALLE2",
+    "seed": 1,
+    "srcc": 0.5431348504583773,
+    "plcc": 0.560103178024292,
+    "within": 0.5431348504583773,
+    "per_generator": {
+      "DALLE2": 0.5431348504583773
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "DALLE2",
+    "seed": 2,
+    "srcc": 0.5593249881999918,
+    "plcc": 0.5835796594619751,
+    "within": 0.5593249881999918,
+    "per_generator": {
+      "DALLE2": 0.5593249881999918
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "midjourney",
+    "seed": 0,
+    "srcc": 0.7581818311709676,
+    "plcc": 0.7833802103996277,
+    "within": 0.7581818311709676,
+    "per_generator": {
+      "midjourney": 0.7581818311709676
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "midjourney",
+    "seed": 1,
+    "srcc": 0.7342405494645422,
+    "plcc": 0.7709156274795532,
+    "within": 0.7342405494645422,
+    "per_generator": {
+      "midjourney": 0.7342405494645422
+    }
+  },
+  {
+    "protocol": "logo",
+    "holdout": "midjourney",
+    "seed": 2,
+    "srcc": 0.7375223163345174,
+    "plcc": 0.7717788219451904,
+    "within": 0.7375223163345174,
+    "per_generator": {
+      "midjourney": 0.7375223163345174
+    }
+  }
+]

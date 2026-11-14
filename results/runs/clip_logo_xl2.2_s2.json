@@ -1,0 +1,10 @@
+{
+  "backend": "clip",
+  "protocol": "logo",
+  "holdout": "xl2.2",
+  "seed": 2,
+  "n_train": 2682,
+  "n_test": 300,
+  "srcc": 0.3877358907910686,
+  "plcc": 0.4560009241104126
+}

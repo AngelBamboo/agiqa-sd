@@ -1,0 +1,158 @@
+{
+  "ridge_1/random": {
+    "all": {
+      "overall": 0.8313016399292671,
+      "within": 0.5272046604586794,
+      "between": 0.980952380952381
+    }
+  },
+  "ridge_1/logo": {
+    "AttnGAN": {
+      "overall": 0.40852129300306017,
+      "within": 0.40852129300306017,
+      "between": NaN
+    },
+    "DALLE2": {
+      "overall": 0.5205945199560984,
+      "within": 0.5205945199560984,
+      "between": NaN
+    },
+    "glide": {
+      "overall": 0.7009373957136531,
+      "within": 0.7009373957136531,
+      "between": NaN
+    },
+    "midjourney": {
+      "overall": 0.712063405426448,
+      "within": 0.712063405426448,
+      "between": NaN
+    },
+    "sd1.5": {
+      "overall": 0.5065835874589271,
+      "within": 0.5065835874589271,
+      "between": NaN
+    },
+    "xl2.2": {
+      "overall": 0.4135088449682414,
+      "within": 0.4135088449682414,
+      "between": NaN
+    }
+  },
+  "ridge_100/random": {
+    "all": {
+      "overall": 0.840009677574508,
+      "within": 0.5477586343759011,
+      "between": 1.0
+    }
+  },
+  "ridge_100/logo": {
+    "AttnGAN": {
+      "overall": 0.4236861401602545,
+      "within": 0.4236861401602545,
+      "between": NaN
+    },
+    "DALLE2": {
+      "overall": 0.5185078031191251,
+      "within": 0.5185078031191251,
+      "between": NaN
+    },
+    "glide": {
+      "overall": 0.7162374658932348,
+      "within": 0.7162374658932348,
+      "between": NaN
+    },
+    "midjourney": {
+      "overall": 0.7312587050849487,
+      "within": 0.7312587050849487,
+      "between": NaN
+    },
+    "sd1.5": {
+      "overall": 0.5388883702929141,
+      "within": 0.5388883702929141,
+      "between": NaN
+    },
+    "xl2.2": {
+      "overall": 0.4355286138044965,
+      "within": 0.4355286138044965,
+      "between": NaN
+    }
+  },
+  "ridge_1000/random": {
+    "all": {
+      "overall": 0.848591403163757,
+      "within": 0.5767512244433487,
+      "between": 1.0
+    }
+  },
+  "ridge_1000/logo": {
+    "AttnGAN": {
+      "overall": 0.45379538417599224,
+      "within": 0.45379538417599224,
+      "between": NaN
+    },
+    "DALLE2": {
+      "overall": 0.506949182846605,
+      "within": 0.506949182846605,
+      "between": NaN
+    },
+    "glide": {
+      "overall": 0.7485480833860131,
+      "within": 0.7485480833860131,
+      "between": NaN
+    },
+    "midjourney": {
+      "overall": 0.7544526531691155,
+      "within": 0.7544526531691155,
+      "between": NaN
+    },
+    "sd1.5": {
+      "overall": 0.5444743517998355,
+      "within": 0.5444743517998355,
+      "between": NaN
+    },
+    "xl2.2": {
+      "overall": 0.46854882242764057,
+      "within": 0.46854882242764057,
+      "between": NaN
+    }
+  },
+  "mlp/random": {
+    "all": {
+      "overall": 0.7436540254274197,
+      "within": 0.422566262526944,
+      "between": 0.980952380952381
+    }
+  },
+  "mlp/logo": {
+    "AttnGAN": {
+      "overall": 0.340141699359029,
+      "within": 0.340141699359029,
+      "between": NaN
+    },
+    "DALLE2": {
+      "overall": 0.3333317342294245,
+      "within": 0.3333317342294245,
+      "between": NaN
+    },
+    "glide": {
+      "overall": 0.616609561890278,
+      "within": 0.616609561890278,
+      "between": NaN
+    },
+    "midjourney": {
+      "overall": 0.5300240092719611,
+      "within": 0.5300240092719611,
+      "between": NaN
+    },
+    "sd1.5": {
+      "overall": 0.42096327680317636,
+      "within": 0.42096327680317636,
+      "between": NaN
+    },
+    "xl2.2": {
+      "overall": 0.298520348524771,
+      "within": 0.298520348524771,
+      "between": NaN
+    }
+  }
+}

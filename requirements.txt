@@ -1,0 +1,17 @@
+# Tested with Python 3.10 and CUDA 12.4.
+# CPU-only works too: install torch from https://pytorch.org first if the
+# default wheel does not match your platform.
+torch>=2.1
+torchvision>=0.16
+open_clip_torch>=2.20
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+Pillow>=10.0
+matplotlib>=3.7
+tqdm>=4.65
+scikit-learn>=1.3
+
+# Optional: classical / no-reference baselines used in score_baselines.py.
+# Only needed to reproduce the NIQE / BRISQUE / MUSIQ / CLIP-IQA / TOPIQ row.
+pyiqa>=0.1.10

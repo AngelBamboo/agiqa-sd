@@ -1,0 +1,12 @@
+{
+  "backend": "clip",
+  "protocol": "logo",
+  "holdout": "DALLE2",
+  "seed": 0,
+  "wsr": 0.5,
+  "reliability": false,
+  "n_train": 2692,
+  "n_test": 290,
+  "srcc": 0.47157832378989706,
+  "plcc": 0.5158731937408447
+}

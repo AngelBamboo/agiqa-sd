@@ -1,0 +1,20 @@
+{
+  "protocol": "prompt",
+  "holdout": null,
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": false,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 1,
+  "epochs": 20,
+  "n_train": 2385,
+  "n_test": 597,
+  "params": 11374535,
+  "srcc": 0.8017522240352634,
+  "plcc": 0.8620421342846076,
+  "krcc": 0.612193520331206,
+  "seconds": 97.7
+}

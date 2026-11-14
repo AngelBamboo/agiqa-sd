@@ -1,0 +1,14 @@
+{
+  "protocol": "logo",
+  "holdout": "AttnGAN",
+  "adv": 1.0,
+  "seed": 0,
+  "epochs": 15,
+  "n_train": 2682,
+  "n_test": 300,
+  "params": 11374535,
+  "srcc": 0.3863838162385369,
+  "plcc": 0.48285535571933913,
+  "krcc": 0.26968521377516713,
+  "seconds": 83.9
+}

@@ -1,0 +1,29 @@
+# datasets and cached features are never committed
+/data/*
+!/data/README.md
+/features/
+/runs/
+*.npy
+*.pt
+*.pth
+*.ckpt
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# local scratch
+scratch/
+tmp/
+*.log

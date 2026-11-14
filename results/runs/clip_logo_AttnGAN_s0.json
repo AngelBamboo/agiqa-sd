@@ -1,0 +1,12 @@
+{
+  "backend": "clip",
+  "protocol": "logo",
+  "holdout": "AttnGAN",
+  "seed": 0,
+  "wsr": 0.5,
+  "reliability": false,
+  "n_train": 2682,
+  "n_test": 300,
+  "srcc": 0.37356169796075556,
+  "plcc": 0.47588223218917847
+}

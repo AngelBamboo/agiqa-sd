@@ -1,0 +1,20 @@
+{
+  "protocol": "random",
+  "holdout": null,
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": false,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 0,
+  "epochs": 20,
+  "n_train": 2385,
+  "n_test": 597,
+  "params": 11374535,
+  "srcc": 0.8350859983331231,
+  "plcc": 0.8870273920672953,
+  "krcc": 0.6488436706965526,
+  "seconds": 74.8
+}

@@ -1,0 +1,12 @@
+{
+  "backend": "clip",
+  "protocol": "random",
+  "holdout": null,
+  "seed": 0,
+  "wsr": 0.5,
+  "reliability": true,
+  "n_train": 2385,
+  "n_test": 597,
+  "srcc": 0.8452769734759246,
+  "plcc": 0.8844925165176392
+}

@@ -1,0 +1,20 @@
+{
+  "protocol": "logo",
+  "holdout": "AttnGAN",
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": false,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 1,
+  "epochs": 20,
+  "n_train": 2682,
+  "n_test": 300,
+  "params": 11374535,
+  "srcc": 0.35936043194766437,
+  "plcc": 0.4621520435368306,
+  "krcc": 0.25245036402066146,
+  "seconds": 107.5
+}

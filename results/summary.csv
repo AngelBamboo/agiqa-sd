@@ -1,0 +1,15 @@
+protocol,model,dataset,held_out,n_test,srcc,srcc_std,source
+random,ResNet-18,AGIQA-3K,-,597,0.830,0.013,results/runs/
+random,CLIP+MLP,AGIQA-3K,-,597,0.833,0.029,results/runs/
+random,CoOp,AGIQA-3K,-,597,0.846,0.020,results/runs/coop_random.json
+random,Ridge(a=1000),AGIQA-3K,-,597,0.849,0.019,results/runs/
+prompt,ResNet-18,AGIQA-3K,-,598,0.813,0.010,results/runs/
+logo,ResNet-18,AGIQA-3K,mean of 6,-,0.523,-,results/runs/logo_*.json
+logo,CLIP+MLP,AGIQA-3K,mean of 6,-,0.522,-,results/runs/clip_logo_*.json
+logo,CoOp,AGIQA-3K,mean of 6,-,0.556,-,results/runs/coop_logo6.json
+logo,Ridge(a=1000),AGIQA-3K,mean of 6,-,0.579,-,results/runs/nested_ridge.json
+random,CLIP+MLP,AIGCIQA2023,-,480,0.815,-,results/runs/aigciqa2023_protocols.json
+logo,CLIP+MLP,AIGCIQA2023,mean of 6,-,0.421,-,results/runs/aigciqa2023_protocols.json
+logo,Ridge(a=1000),AIGCIQA2023,mean of 6,-,0.456,-,results/runs/nested_ridge_2023.json
+cross_db,CLIP+MLP,3K->1K,-,1079,0.569,-,results/runs/cross_1k.json
+cross_db,CLIP+MLP,3K->2023,-,2400,0.600,-,results/runs/

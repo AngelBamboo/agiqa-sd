@@ -1,0 +1,20 @@
+{
+  "protocol": "logo",
+  "holdout": "DALLE2",
+  "adv": 0.0,
+  "balanced": false,
+  "rank_weight": 0.0,
+  "strong_aug": false,
+  "normalize": "global",
+  "local": false,
+  "ttc": 1,
+  "seed": 0,
+  "epochs": 20,
+  "n_train": 2692,
+  "n_test": 290,
+  "params": 11374535,
+  "srcc": 0.4920479285651299,
+  "plcc": 0.570022629448887,
+  "krcc": 0.33993940778960813,
+  "seconds": 66.6
+}
