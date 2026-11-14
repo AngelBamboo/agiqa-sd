@@ -80,6 +80,7 @@ results/summary.csv     the main table above, machine readable
 results/runs/           one JSON record per experiment (60 files)
 results/predictions/    per-image predictions (12 CSV files)
 data/                   put the datasets here (not shipped, see below)
+figs/                   created by make_figs.py
 ```
 
 ---
@@ -107,7 +108,7 @@ unpack them into `data/` (or point the environment variables anywhere else):
 | Directory | Dataset | Source |
 |---|---|---|
 | `data/agiqa3k/` | AGIQA-3K | https://github.com/lcysyzxdxc/AGIQA-3K |
-| `data/aigciqa2023/` | AIGCIQA2023 | https://github.com/wanghaining/2023-AIGC </br> (see the repository README for the current download link) |
+| `data/aigciqa2023/` | AIGCIQA2023 | https://github.com/wanghaining/2023-AIGC — the images are linked from that repository's README |
 | `data/agiqa1k/` | AGIQA-1K | https://github.com/lcysyzxdxc/AGIQA-1K |
 
 Expected layout:
@@ -160,13 +161,17 @@ python train.py --protocol prompt --seed 0
 **4. Leave-one-generator-out**, once per held-out generator
 
 ```bash
-for g in "SD 1.5" Midjourney GLIDE AttnGAN SDXL "DALL·E 2"; do
+for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python train.py     --protocol logo --holdout "$g" --seed 0
   python head_eval.py --protocol logo --holdout "$g" --seed 0
 done
 python nested_ridge.py      # nested alpha selection, all six folds
 python source_only.py --holdout AttnGAN   # source-only control
 ```
+
+Generator labels follow the AGIQA-3K release: `sd1.5` = SD 1.5, `xl2.2` = SDXL 2.2,
+`DALLE2` = DALL·E 2, `glide` = GLIDE, `midjourney` = Midjourney. They are listed in
+`GENERATORS` in `agiqa/data.py`.
 
 **5. Second database and cross-database transfer**
 
