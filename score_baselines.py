@@ -16,6 +16,9 @@ from scipy import stats
 import agiqa.config as cfg
 
 
+LOWER_IS_BETTER = {"niqe", "brisque", "piqe", "clipiqa", "ilniqe", "brisque_matlab"}
+
+
 def collect():
     rows = list(csv.DictReader(open(os.path.join(cfg.DATA_3K, "data.csv"), encoding="utf-8")))
     return rows
@@ -48,7 +51,7 @@ def decompose(scores, gens, mos):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--metrics", default="niqe,brisque,musiq,clipiqa,topiq_nr")
+    ap.add_argument("--metrics", default="niqe,brisque,piqe,musiq")
     ap.add_argument("--out", default=os.path.join(cfg.RUNS, "baselines_pyiqa.json"))
     ap.add_argument("--max_images", type=int, default=0)
     args = ap.parse_args()
@@ -75,8 +78,15 @@ def main():
                 scores.append(float(metric(img)))
         gens = [r["name"].split("_")[0] for r in rows]
         mos = [float(r["mos_quality"]) for r in rows]
-        # pyiqa metrics are "lower is better" for some; Spearman sign encodes direction
+        # NIQE, BRISQUE and PIQE assign lower scores to better images. Flip them
+        # so that every metric in the record is oriented the same way as MOS;
+        # the raw scores and the convention used are stored alongside.
+        if name.lower() in LOWER_IS_BETTER:
+            scores = [-s for s in scores]
         results[name] = decompose(scores, gens, mos)
+        results[name]["orientation"] = ("negated: lower is better"
+                                        if name.lower() in LOWER_IS_BETTER
+                                        else "as published")
         r = results[name]
         fmt = lambda v: f"{v:+.3f}" if isinstance(v, float) else "  n/a"
         print(f"{name:10s} overall {fmt(r['overall'])}  within {fmt(r['within_mean'])}  between {fmt(r['between'])}")

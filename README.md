@@ -51,6 +51,7 @@ Diagnostics on the random split, where all three model families agree
 | between-source SRCC | 1.000 | ranking of the six generator means |
 | variance explained by source identity | 57.5 % | a property of the database, model-independent |
 | source-inference baseline / CoOp SRCC | 50 % | nearest-centroid label, no image-level quality regressor |
+| label-only predictor, pooled SRCC | 0.680 | training-set mean MOS per generator; no image examined |
 | cross-source share of Kendall's net agreement | 83.4 % | pairs joining two generators are 75.8 % of the test set |
 
 Additional evidence in the paper: a second database (AIGCIQA2023: random 0.815,
@@ -82,6 +83,7 @@ reliability.py          ceiling on correlation from the released per-image ratin
 probe.py                linear probe: how decodable is the generator from the features
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
 source_only.py          nearest-generator-centroid baseline (no image-level quality regressor)
+source_mean_baseline.py the label-only predictor: training-set mean MOS per generator, no image examined
 paired_source.py        seen-source vs unseen-source on identical test images (frozen features)
 paired_resnet.py        the same control on the end-to-end ResNet-18
 report.py               print pooled / within-source / between-source SRCC for any prediction file
@@ -222,6 +224,7 @@ python extract_2023.py
 python eval_2023.py --seeds 0,1,2     # random + six LOGO folds, three seeds
 python nested_ridge.py --dataset 2023
 python reliability.py                 # attainable ceiling from the per-image rating spread
+python score_baselines.py --metrics niqe,brisque,piqe,musiq --max_images 600   # needs pyiqa
 python cross_eval.py --weights <checkpoint>.pt
 ```
 
@@ -296,7 +299,7 @@ the equal-weight mean across files — which is the leave-one-generator-out figu
 when the files are one per held-out generator. Apply it to any new model's
 predictions to see how much of its score comes from ordering sources. 
 
-`--pairs` adds the exact pair decomposition of Kendall's tau: tau over pairs that share a generator, tau over pairs that do not, and the share of the net concordant-minus-discordant count contributed by cross-generator pairs. On the AGIQA-3K random split 75.8% of pairs join two generators, and they carry 83.4% of the net count for every one of the four models tested.
+`--pairs` adds the exact pair decomposition of Kendall's tau-a (sign agreement over all pairs, ties counted as zero): tau over pairs that share a generator, tau over pairs that do not, and the share of the net concordant-minus-discordant count contributed by cross-generator pairs. On the AGIQA-3K random split 75.8% of pairs join two generators, and they carry 83.4% of the net count for every one of the four models tested.
 
 ## License
 
