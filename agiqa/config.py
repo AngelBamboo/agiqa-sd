@@ -29,6 +29,7 @@ DATA_1K = _path("AGIQA_1K", os.path.join("data", "agiqa1k"))
 FEATURES = _path("AGIQA_FEATURES", "features")
 RUNS = _path("AGIQA_RUNS", "runs")
 FIGURES = _path("AGIQA_FIGURES", "figs")
+PREDICTIONS = _path("AGIQA_PREDICTIONS", "results/predictions")
 
 CLIP_3K = os.path.join(FEATURES, "agiqa3k_ViT-B-32_openai.npy")
 CLIP_2023 = os.path.join(FEATURES, "aigciqa2023_ViT-B-32_openai.npy")

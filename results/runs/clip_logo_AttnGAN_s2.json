@@ -3,8 +3,10 @@
   "protocol": "logo",
   "holdout": "AttnGAN",
   "seed": 2,
+  "wsr": 0.0,
+  "reliability": false,
   "n_train": 2682,
   "n_test": 300,
-  "srcc": 0.3845137665781062,
-  "plcc": 0.47182223200798035
+  "srcc": 0.38101945156199063,
+  "plcc": 0.46797943115234375
 }

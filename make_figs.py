@@ -1,4 +1,9 @@
-"""Publication figures for the source-confound paper."""
+"""Publication figures for the source-confound paper.
+
+Every panel is drawn from the archived records in results/ (plus the dataset CSV
+for the MOS distribution), so re-running this script after new experiments is
+enough to refresh the figures -- no numbers are hard-coded here.
+"""
 import csv
 import json
 import os
@@ -7,6 +12,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import stats
+
 import agiqa.config as cfg
 
 plt.rcParams.update({
@@ -23,45 +30,82 @@ C_MAIN = "#3b6ea5"
 C_ACC = "#bf616a"
 C_GREY = "#9aa4b2"
 
+# paper order and display names
+GENS = ["sd1.5", "midjourney", "glide", "AttnGAN", "xl2.2", "DALLE2"]
+LABEL = {"sd1.5": "SD 1.5", "midjourney": "Midjourney", "glide": "GLIDE",
+         "AttnGAN": "AttnGAN", "xl2.2": "SDXL", "DALLE2": "DALL-E 2"}
+
 
 def load_rows():
     return list(csv.DictReader(open(os.path.join(cfg.DATA_3K, "data.csv"), encoding="utf-8")))
 
 
+def run_record(name):
+    path = os.path.join(cfg.RUNS, name)
+    if not os.path.exists(path):
+        raise SystemExit(f"missing record {path}; run the experiment that produces it first")
+    return json.load(open(path, encoding="utf-8"))
+
+
+def logo_folds(prefix):
+    """Per-generator (mean, std) of the three seeds of a LOGO experiment."""
+    out = {}
+    for g in GENS:
+        vals = [run_record(f"{prefix}_logo_{g}_s{s}.json")["srcc"] for s in range(3)]
+        out[g] = (float(np.mean(vals)), float(np.std(vals, ddof=1)))
+    return out
+
+
+def split_stats(pred_csv):
+    """Overall, within-generator and between-generator SRCC of a prediction file."""
+    rows = list(csv.DictReader(open(pred_csv, encoding="utf-8")))
+    pred = np.array([float(r["pred"]) for r in rows])
+    mos = np.array([float(r["mos"]) for r in rows])
+    gens = np.array([r["generator"] for r in rows])
+    within = []
+    gm, pm = [], []
+    for g in sorted(set(gens)):
+        sel = gens == g
+        within.append(stats.spearmanr(pred[sel], mos[sel]).statistic)
+        gm.append(mos[sel].mean())
+        pm.append(pred[sel].mean())
+    return (float(stats.spearmanr(pred, mos).statistic), float(np.mean(within)),
+            float(stats.spearmanr(pm, gm).statistic))
+
+
 def fig1_dataset():
     rows = load_rows()
-    gens = ["AttnGAN", "glide", "DALLE2", "sd1.5", "midjourney", "xl2.2"]
-    data = [[float(r["mos_quality"]) for r in rows if r["name"].split("_")[0] == g] for g in gens]
+    data = [[float(r["mos_quality"]) for r in rows if r["name"].split("_")[0] == g] for g in GENS]
     fig, ax = plt.subplots(figsize=(3.4, 2.4))
-    bp = ax.boxplot(data, labels=gens, patch_artist=True, widths=0.6,
+    bp = ax.boxplot(data, tick_labels=[LABEL[g] for g in GENS], patch_artist=True, widths=0.6,
                     medianprops=dict(color="white", lw=1.2),
                     flierprops=dict(marker=".", ms=2, alpha=0.4))
     for patch in bp["boxes"]:
         patch.set_facecolor(C_MAIN)
         patch.set_alpha(0.85)
     ax.set_ylabel("MOS (perceptual quality)")
-    ax.tick_params(axis="x", rotation=20)
+    ax.tick_params(axis="x", rotation=25)
     ax.axhline(np.mean([np.mean(d) for d in data]), ls="--", lw=0.8, color=C_GREY)
     fig.savefig(os.path.join(OUT, "fig1_mos_by_generator.png"))
     plt.close(fig)
 
 
 def fig2_protocol():
-    """Random-split vs LOGO, per generator."""
-    d = json.load(open(os.path.join(cfg.RUNS, "aigciqa2023_protocols.json"), encoding="utf-8")) \
-        if os.path.exists(os.path.join(cfg.RUNS, "aigciqa2023_protocols.json")) else None
-    logo = {"AttnGAN": (0.382, 0.013), "glide": (0.680, 0.013), "xl2.2": (0.372, 0.019),
-            "DALLE2": (0.488, 0.022), "midjourney": (0.700, 0.005), "sd1.5": None}
-    names = [k for k, v in logo.items() if v]
-    means = [logo[k][0] for k in names]
-    errs = [logo[k][1] for k in names]
+    """Random-split vs LOGO, per generator, for the CLIP readout."""
+    folds = logo_folds("clip")
+    rnd = [run_record(f"clip_random_all_s{s}.json")["srcc"] for s in range(3)]
+    control = [run_record(f"source_only_{g}.json")["srcc"] for g in GENS]
+
     fig, ax = plt.subplots(figsize=(3.4, 2.4))
-    x = np.arange(len(names))
-    ax.bar(x, means, yerr=errs, capsize=2.5, color=C_MAIN, width=0.6, label="leave-one-generator-out")
-    ax.axhline(0.833, ls="--", color=C_ACC, lw=1.2, label="random split (0.833)")
-    ax.axhline(0.288, ls=":", color=C_GREY, lw=1.4, label="source-only control (0.288)")
+    x = np.arange(len(GENS))
+    ax.bar(x, [folds[g][0] for g in GENS], yerr=[folds[g][1] for g in GENS],
+           capsize=2.5, color=C_MAIN, width=0.6, label="leave-one-generator-out")
+    ax.axhline(np.mean(rnd), ls="--", color=C_ACC, lw=1.2,
+               label=f"random split ({np.mean(rnd):.3f})")
+    ax.axhline(np.mean(control), ls=":", color=C_GREY, lw=1.4,
+               label=f"source-only control ({np.mean(control):.3f})")
     ax.set_xticks(x)
-    ax.set_xticklabels(names, rotation=20)
+    ax.set_xticklabels([LABEL[g] for g in GENS], rotation=25, ha="right")
     ax.set_ylabel("SRCC")
     ax.set_ylim(0, 1.15)
     ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
@@ -72,9 +116,12 @@ def fig2_protocol():
 
 def fig3_decomposition():
     models = ["ResNet-18", "CLIP + MLP", "CoOp"]
-    overall = [0.830, 0.833, 0.862]
-    within = [0.530, 0.535, 0.549]
-    between = [1.000, 1.000, 1.000]
+    files = ["preds_random_s0.csv", "preds_clip_random.csv", "preds_coop.csv"]
+    stats_by_model = [split_stats(os.path.join(cfg.PREDICTIONS, f)) for f in files]
+    overall = [s[0] for s in stats_by_model]
+    within = [s[1] for s in stats_by_model]
+    between = [s[2] for s in stats_by_model]
+
     fig, ax = plt.subplots(figsize=(3.4, 2.3))
     x = np.arange(len(models))
     w = 0.26
@@ -93,48 +140,35 @@ def fig3_decomposition():
 
 
 def fig4_source_only():
-    gens = ["GLIDE", "Midjourney", "SDXL", "AttnGAN", "DALL-E 2"]
-    src = [0.517, 0.433, 0.205, 0.148, 0.138]
-    mod = [0.680, 0.700, 0.372, 0.382, 0.488]
+    control = [run_record(f"source_only_{g}.json")["srcc"] for g in GENS]
+    trained = [np.mean([run_record(f"clip_logo_{g}_s{s}.json")["srcc"] for s in range(3)])
+               for g in GENS]
+
     fig, ax = plt.subplots(figsize=(3.4, 2.4))
-    x = np.arange(len(gens))
+    x = np.arange(len(GENS))
     w = 0.36
-    ax.bar(x - w / 2, mod, w, label="trained model", color=C_MAIN)
-    ax.bar(x + w / 2, src, w, label="source-only control", color=C_GREY)
+    ax.bar(x - w / 2, trained, w, label="trained model", color=C_MAIN)
+    ax.bar(x + w / 2, control, w, label="source-only control", color=C_GREY)
     ax.set_xticks(x)
-    ax.set_xticklabels(gens, rotation=20)
+    ax.set_xticklabels([LABEL[g] for g in GENS], rotation=25, ha="right")
     ax.set_ylabel("SRCC (held-out generator)")
-    ax.legend(frameon=False)
+    ax.set_ylim(0, 0.95)
+    ax.legend(frameon=False, loc="upper right")
     fig.savefig(os.path.join(OUT, "fig4_source_only.png"))
     plt.close(fig)
 
 
-def fig5_ceiling():
-    gens = ["Midjourney", "GLIDE", "SD 1.5", "DALL-E 2", "AttnGAN", "SDXL"]
-    achieved = [0.785, 0.799, 0.578, 0.494, 0.360, 0.167]
-    ceiling = [0.792, 0.676, 0.726, 0.683, 0.443, 0.590]
-    fig, ax = plt.subplots(figsize=(3.2, 2.8))
-    ax.plot([0, 1], [0, 1], ls="--", lw=0.8, color=C_GREY)
-    ax.scatter(ceiling, achieved, s=42, color=C_MAIN, zorder=3)
-    for x, y, g in zip(ceiling, achieved, gens):
-        ax.annotate(g, (x, y), textcoords="offset points", xytext=(4, -3), fontsize=7)
-    ax.set_xlabel("estimated reliability ceiling")
-    ax.set_ylabel("achieved within-generator SRCC")
-    ax.set_xlim(0.35, 0.85)
-    ax.set_ylim(0.1, 0.85)
-    fig.savefig(os.path.join(OUT, "fig5_ceiling.png"))
-    plt.close(fig)
+def fig5_alpha():
+    sweep = run_record("alpha_sweep.json")
+    alphas = sorted(int(a) for a in sweep)
+    rand = [sweep[str(a)]["random"] for a in alphas]
+    logo = [sweep[str(a)]["logo"] for a in alphas]
+    within = [sweep[str(a)]["within"] for a in alphas]
 
-
-def fig6_alpha():
-    a = [100, 300, 1000, 3000, 10000, 30000, 100000]
-    rand = [0.840, 0.846, 0.849, 0.845, 0.832, 0.810, 0.786]
-    logo = [0.561, 0.571, 0.579, 0.575, 0.552, 0.520, 0.487]
-    within = [0.548, 0.565, 0.577, 0.579, 0.560, 0.528, 0.496]
     fig, ax = plt.subplots(figsize=(3.4, 2.4))
-    ax.plot(a, rand, "o-", ms=3.5, color=C_GREY, label="random split")
-    ax.plot(a, logo, "s-", ms=3.5, color=C_MAIN, label="LOGO")
-    ax.plot(a, within, "^--", ms=3.5, color=C_ACC, label="within-generator")
+    ax.plot(alphas, rand, "o-", ms=3.5, color=C_GREY, label="random split")
+    ax.plot(alphas, logo, "s-", ms=3.5, color=C_MAIN, label="LOGO")
+    ax.plot(alphas, within, "^--", ms=3.5, color=C_ACC, label="within-generator")
     ax.set_xscale("log")
     ax.set_xlabel(r"ridge regularisation $\alpha$")
     ax.set_ylabel("SRCC")
@@ -144,7 +178,6 @@ def fig6_alpha():
 
 
 if __name__ == "__main__":
-    for fn in [fig1_dataset, fig2_protocol, fig3_decomposition, fig4_source_only,
-               fig5_ceiling, fig6_alpha]:
+    for fn in [fig1_dataset, fig2_protocol, fig3_decomposition, fig4_source_only, fig5_alpha]:
         fn()
         print("ok", fn.__name__)

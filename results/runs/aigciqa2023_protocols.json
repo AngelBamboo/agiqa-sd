@@ -1,66 +1,211 @@
 {
-  "random": {
-    "overall": 0.828077487315483,
-    "within_mean": 0.5013784474057194,
-    "between": 0.942857142857143,
-    "per_generator": {
-      "Controlnet": 0.3881895594224362,
-      "DALLE": 0.329381694255112,
-      "Glide": 0.37660455486542443,
-      "Lafite": 0.38919362400375057,
-      "Unidiffuser": 0.7723509811181043,
-      "stable-diffusion": 0.752550270769489
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "random_mean": 0.8153507610710116,
+  "random_std": 0.011748887940693451,
+  "logo_mean_of_seeds": 0.4213824253068248,
+  "logo_std": 0.011590409663096001,
+  "per_seed": {
+    "0": {
+      "random": {
+        "overall": 0.813056697294693,
+        "within_mean": 0.4412218340792619,
+        "between": 0.942857142857143,
+        "per_generator": {
+          "Controlnet": 0.5505700871898055,
+          "DALLE": 0.18337595907928392,
+          "Glide": 0.47808038878201886,
+          "Lafite": 0.1105010295126973,
+          "Unidiffuser": 0.6234205113135469,
+          "stable-diffusion": 0.7013830285982185
+        }
+      },
+      "logo": {
+        "Controlnet": {
+          "overall": 0.4657367858549115,
+          "within_mean": 0.4657367858549115,
+          "between": NaN,
+          "per_generator": {
+            "Controlnet": 0.4657367858549115
+          }
+        },
+        "DALLE": {
+          "overall": 0.2729975812348827,
+          "within_mean": 0.2729975812348827,
+          "between": NaN,
+          "per_generator": {
+            "DALLE": 0.2729975812348827
+          }
+        },
+        "Glide": {
+          "overall": 0.3133401458759117,
+          "within_mean": 0.3133401458759117,
+          "between": NaN,
+          "per_generator": {
+            "Glide": 0.3133401458759117
+          }
+        },
+        "Lafite": {
+          "overall": 0.21981718635741473,
+          "within_mean": 0.21981718635741473,
+          "between": NaN,
+          "per_generator": {
+            "Lafite": 0.21981718635741473
+          }
+        },
+        "Unidiffuser": {
+          "overall": 0.6686854292839329,
+          "within_mean": 0.6686854292839329,
+          "between": NaN,
+          "per_generator": {
+            "Unidiffuser": 0.6686854292839329
+          }
+        },
+        "stable-diffusion": {
+          "overall": 0.6448770929818312,
+          "within_mean": 0.6448770929818312,
+          "between": NaN,
+          "per_generator": {
+            "stable-diffusion": 0.6448770929818312
+          }
+        }
+      },
+      "logo_mean": 0.4309090369314808
+    },
+    "1": {
+      "random": {
+        "overall": 0.8049180986028586,
+        "within_mean": 0.47569241809557933,
+        "between": 0.942857142857143,
+        "per_generator": {
+          "Controlnet": 0.3997439544807965,
+          "DALLE": 0.34898154477101845,
+          "Glide": 0.47212931995540697,
+          "Lafite": 0.2735385988398037,
+          "Unidiffuser": 0.692891521658645,
+          "stable-diffusion": 0.6668695688678056
+        }
+      },
+      "logo": {
+        "Controlnet": {
+          "overall": 0.45891868074175457,
+          "within_mean": 0.45891868074175457,
+          "between": NaN,
+          "per_generator": {
+            "Controlnet": 0.45891868074175457
+          }
+        },
+        "DALLE": {
+          "overall": 0.23474134213338832,
+          "within_mean": 0.23474134213338832,
+          "between": NaN,
+          "per_generator": {
+            "DALLE": 0.23474134213338832
+          }
+        },
+        "Glide": {
+          "overall": 0.32991693698085606,
+          "within_mean": 0.32991693698085606,
+          "between": NaN,
+          "per_generator": {
+            "Glide": 0.32991693698085606
+          }
+        },
+        "Lafite": {
+          "overall": 0.20893499334370835,
+          "within_mean": 0.20893499334370835,
+          "between": NaN,
+          "per_generator": {
+            "Lafite": 0.20893499334370835
+          }
+        },
+        "Unidiffuser": {
+          "overall": 0.6679957999737498,
+          "within_mean": 0.6679957999737498,
+          "between": NaN,
+          "per_generator": {
+            "Unidiffuser": 0.6679957999737498
+          }
+        },
+        "stable-diffusion": {
+          "overall": 0.6480509253182832,
+          "within_mean": 0.6480509253182832,
+          "between": NaN,
+          "per_generator": {
+            "stable-diffusion": 0.6480509253182832
+          }
+        }
+      },
+      "logo_mean": 0.4247597797486234
+    },
+    "2": {
+      "random": {
+        "overall": 0.828077487315483,
+        "within_mean": 0.5013784474057194,
+        "between": 0.942857142857143,
+        "per_generator": {
+          "Controlnet": 0.3881895594224362,
+          "DALLE": 0.329381694255112,
+          "Glide": 0.37660455486542443,
+          "Lafite": 0.38919362400375057,
+          "Unidiffuser": 0.7723509811181043,
+          "stable-diffusion": 0.752550270769489
+        }
+      },
+      "logo": {
+        "Controlnet": {
+          "overall": 0.4493204957530984,
+          "within_mean": 0.4493204957530984,
+          "between": NaN,
+          "per_generator": {
+            "Controlnet": 0.4493204957530984
+          }
+        },
+        "DALLE": {
+          "overall": 0.24106069412933828,
+          "within_mean": 0.24106069412933828,
+          "between": NaN,
+          "per_generator": {
+            "DALLE": 0.24106069412933828
+          }
+        },
+        "Glide": {
+          "overall": 0.316341664635404,
+          "within_mean": 0.316341664635404,
+          "between": NaN,
+          "per_generator": {
+            "Glide": 0.316341664635404
+          }
+        },
+        "Lafite": {
+          "overall": 0.145670785442409,
+          "within_mean": 0.145670785442409,
+          "between": NaN,
+          "per_generator": {
+            "Lafite": 0.145670785442409
+          }
+        },
+        "Unidiffuser": {
+          "overall": 0.6569928562053512,
+          "within_mean": 0.6569928562053512,
+          "between": NaN,
+          "per_generator": {
+            "Unidiffuser": 0.6569928562053512
+          }
+        },
+        "stable-diffusion": {
+          "overall": 0.6414842592766204,
+          "within_mean": 0.6414842592766204,
+          "between": NaN,
+          "per_generator": {
+            "stable-diffusion": 0.6414842592766204
+          }
+        }
+      },
+      "logo_mean": 0.40847845924037024
     }
-  },
-  "logo": {
-    "Controlnet": {
-      "overall": 0.4493204957530984,
-      "within_mean": 0.4493204957530984,
-      "between": NaN,
-      "per_generator": {
-        "Controlnet": 0.4493204957530984
-      }
-    },
-    "DALLE": {
-      "overall": 0.24106069412933828,
-      "within_mean": 0.24106069412933828,
-      "between": NaN,
-      "per_generator": {
-        "DALLE": 0.24106069412933828
-      }
-    },
-    "Glide": {
-      "overall": 0.316341664635404,
-      "within_mean": 0.316341664635404,
-      "between": NaN,
-      "per_generator": {
-        "Glide": 0.316341664635404
-      }
-    },
-    "Lafite": {
-      "overall": 0.145670785442409,
-      "within_mean": 0.145670785442409,
-      "between": NaN,
-      "per_generator": {
-        "Lafite": 0.145670785442409
-      }
-    },
-    "Unidiffuser": {
-      "overall": 0.6569928562053512,
-      "within_mean": 0.6569928562053512,
-      "between": NaN,
-      "per_generator": {
-        "Unidiffuser": 0.6569928562053512
-      }
-    },
-    "stable-diffusion": {
-      "overall": 0.6414842592766204,
-      "within_mean": 0.6414842592766204,
-      "between": NaN,
-      "per_generator": {
-        "stable-diffusion": 0.6414842592766204
-      }
-    }
-  },
-  "logo_mean": 0.40847845924037024
+  }
 }

@@ -3,8 +3,10 @@
   "protocol": "logo",
   "holdout": "DALLE2",
   "seed": 1,
+  "wsr": 0.0,
+  "reliability": false,
   "n_train": 2692,
   "n_test": 290,
-  "srcc": 0.4637239826277644,
-  "plcc": 0.5228315591812134
+  "srcc": 0.49669469909292424,
+  "plcc": 0.5523025989532471
 }

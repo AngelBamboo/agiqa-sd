@@ -1,26 +1,47 @@
 {
-  "Controlnet": {
-    "alpha": 1000,
-    "srcc": 0.4799444996531228
+  "logo": {
+    "Controlnet": {
+      "n_test": 400,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.7759633302221433,
+      "srcc": 0.4799444996531228
+    },
+    "DALLE": {
+      "n_test": 400,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.7840530878317988,
+      "srcc": 0.28210302636749446
+    },
+    "Glide": {
+      "n_test": 400,
+      "alpha_selected": 3000,
+      "inner_srcc": 0.6997661030681893,
+      "srcc": 0.35212626328914554
+    },
+    "Lafite": {
+      "n_test": 400,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.7139435980346356,
+      "srcc": 0.24946543415896347
+    },
+    "Unidiffuser": {
+      "n_test": 400,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.795532609337542,
+      "srcc": 0.6749550934693341
+    },
+    "stable-diffusion": {
+      "n_test": 400,
+      "alpha_selected": 1000,
+      "inner_srcc": 0.776203863114771,
+      "srcc": 0.6961192882455515
+    }
   },
-  "DALLE": {
-    "alpha": 1000,
-    "srcc": 0.28210302636749446
-  },
-  "Glide": {
-    "alpha": 3000,
-    "srcc": 0.35212626328914554
-  },
-  "Lafite": {
-    "alpha": 1000,
-    "srcc": 0.24946543415896347
-  },
-  "Unidiffuser": {
-    "alpha": 1000,
-    "srcc": 0.6749550934693341
-  },
-  "stable-diffusion": {
-    "alpha": 1000,
-    "srcc": 0.6961192882455515
+  "logo_mean": 0.4557856008639353,
+  "random": {
+    "seed": 0,
+    "alpha_selected": 1000,
+    "inner_srcc": 0.7589073433773098,
+    "srcc": 0.8290723918072561
   }
 }

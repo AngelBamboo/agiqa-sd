@@ -25,12 +25,12 @@ the six held-out generators (SD 1.5, Midjourney, GLIDE, AttnGAN, SDXL, DALL·E 2
 | Protocol | Model | SRCC | Backbone |
 |---|---|---:|---|
 | Random 80/20 | ResNet-18 | 0.830 ± 0.013 | trained from ImageNet init |
-| Random 80/20 | CLIP ViT-B/32 + MLP | 0.833 ± 0.029 | frozen features |
+| Random 80/20 | CLIP ViT-B/32 + MLP | 0.832 ± 0.028 | frozen features |
 | Random 80/20 | CoOp (16 ctx tokens) | 0.846 ± 0.020 | frozen features + prompts |
 | Random 80/20 | Ridge (α = 1000) | **0.849 ± 0.019** | frozen features |
-| Prompt-grouped | ResNet-18 | 0.813 ± 0.010 | trained |
+| Prompt-grouped | ResNet-18 | 0.813 ± 0.013 | trained |
 | LOGO | ResNet-18 | 0.523 | trained |
-| LOGO | CLIP ViT-B/32 + MLP | 0.522 | frozen features |
+| LOGO | CLIP ViT-B/32 + MLP | 0.544 | frozen features |
 | LOGO | CoOp | 0.556 | frozen features + prompts |
 | LOGO | Ridge (α = 1000) | **0.579** | frozen features |
 
@@ -39,11 +39,11 @@ Diagnostics on the random split, where all three model families agree
 
 | Quantity | Value | Meaning |
 |---|---:|---|
-| overall SRCC | 0.833 | ranking over the whole test set |
-| within-source SRCC | 0.535 | equal-weight mean over the six generators |
+| overall SRCC | 0.848 | ranking over the whole test set |
+| within-source SRCC | 0.518 | equal-weight mean over the six generators |
 | between-source SRCC | 1.000 | ranking of the six generator means |
 | variance explained by source identity | 57.5 % | a property of the database, model-independent |
-| source-only control / CoOp SRCC | 52 % | nearest-centroid classifier that never sees quality |
+| source-only control / CoOp SRCC | 50 % | nearest-centroid classifier that never sees quality |
 
 Additional evidence in the paper: a second database (AIGCIQA2023: random 0.815,
 LOGO 0.421), cross-database transfer (AGIQA-3K → AGIQA-1K 0.569, → AIGCIQA2023
@@ -66,7 +66,9 @@ train.py                ResNet-18 training (random / prompt / logo, augmentation
                         adversarial head, ranking loss, per-image dump)
 head_eval.py            linear / MLP readout on frozen CLIP features (WSR, reliability weights)
 coop_agiqa.py           CoOp-style prompt learning on frozen CLIP
-nested_ridge.py         ridge readout with nested alpha selection
+nested_ridge.py         ridge readout with nested alpha selection (3K and 2023)
+alpha_sweep.py          sensitivity of the ridge readout to its penalty
+reliability.py          split-half reliability and Cronbach alpha of the 2023 MOS
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
 source_only.py          nearest-generator-centroid control (no quality signal)
 score_baselines.py      NIQE / BRISQUE / MUSIQ / CLIP-IQA / TOPIQ reference scores
@@ -148,7 +150,7 @@ python extract_features.py
 
 ```bash
 python train.py     --protocol random --seed 0
-python head_eval.py --protocol random --seed 0
+python head_eval.py --protocol random --seed 0 --dump results/predictions/preds_clip_random.csv
 python coop_agiqa.py --protocols random --seeds 0,1,2
 ```
 
@@ -165,8 +167,11 @@ for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python train.py     --protocol logo --holdout "$g" --seed 0
   python head_eval.py --protocol logo --holdout "$g" --seed 0
 done
-python nested_ridge.py      # nested alpha selection, all six folds
-python source_only.py --holdout AttnGAN   # source-only control
+python nested_ridge.py                    # nested alpha selection, all six folds
+python alpha_sweep.py                     # penalty sensitivity analysis
+for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
+  python source_only.py --holdout "$g" --out auto   # source-inference control
+done
 ```
 
 Generator labels follow the AGIQA-3K release: `sd1.5` = SD 1.5, `xl2.2` = SDXL 2.2,
@@ -177,7 +182,9 @@ Generator labels follow the AGIQA-3K release: `sd1.5` = SD 1.5, `xl2.2` = SDXL 2
 
 ```bash
 python extract_2023.py
-python eval_2023.py
+python eval_2023.py --seeds 0,1,2     # random + six LOGO folds, three seeds
+python nested_ridge.py --dataset 2023
+python reliability.py                 # split-half and Cronbach alpha of the MOS
 python cross_eval.py --weights <checkpoint>.pt
 ```
 

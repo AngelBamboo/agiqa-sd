@@ -49,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--protocol", default="random", choices=["random", "prompt", "logo"])
     ap.add_argument("--holdout", default="AttnGAN")
-    ap.add_argument("--epochs", type=int, default=30)
+    ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--size", type=int, default=224)
@@ -179,8 +179,7 @@ def main():
     print(json.dumps(result, indent=2))
 
     out = args.out or os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "runs",
-        f"{args.protocol}_{result['holdout'] or 'all'}_adv{args.adv}_s{args.seed}.json")
+        cfg.RUNS, f"{args.protocol}_{result['holdout'] or 'all'}_adv{args.adv}_s{args.seed}.json")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)

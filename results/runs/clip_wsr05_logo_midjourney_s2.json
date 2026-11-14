@@ -1,0 +1,12 @@
+{
+  "backend": "clip_wsr05",
+  "protocol": "logo",
+  "holdout": "midjourney",
+  "seed": 2,
+  "wsr": 0.5,
+  "reliability": false,
+  "n_train": 2390,
+  "n_test": 592,
+  "srcc": 0.6810295330660506,
+  "plcc": 0.6877967119216919
+}

@@ -1,0 +1,66 @@
+{
+  "random": {
+    "overall": 0.8049180986028586,
+    "within_mean": 0.47569241809557933,
+    "between": 0.942857142857143,
+    "per_generator": {
+      "Controlnet": 0.3997439544807965,
+      "DALLE": 0.34898154477101845,
+      "Glide": 0.47212931995540697,
+      "Lafite": 0.2735385988398037,
+      "Unidiffuser": 0.692891521658645,
+      "stable-diffusion": 0.6668695688678056
+    }
+  },
+  "logo": {
+    "Controlnet": {
+      "overall": 0.45891868074175457,
+      "within_mean": 0.45891868074175457,
+      "between": NaN,
+      "per_generator": {
+        "Controlnet": 0.45891868074175457
+      }
+    },
+    "DALLE": {
+      "overall": 0.23474134213338832,
+      "within_mean": 0.23474134213338832,
+      "between": NaN,
+      "per_generator": {
+        "DALLE": 0.23474134213338832
+      }
+    },
+    "Glide": {
+      "overall": 0.32991693698085606,
+      "within_mean": 0.32991693698085606,
+      "between": NaN,
+      "per_generator": {
+        "Glide": 0.32991693698085606
+      }
+    },
+    "Lafite": {
+      "overall": 0.20893499334370835,
+      "within_mean": 0.20893499334370835,
+      "between": NaN,
+      "per_generator": {
+        "Lafite": 0.20893499334370835
+      }
+    },
+    "Unidiffuser": {
+      "overall": 0.6679957999737498,
+      "within_mean": 0.6679957999737498,
+      "between": NaN,
+      "per_generator": {
+        "Unidiffuser": 0.6679957999737498
+      }
+    },
+    "stable-diffusion": {
+      "overall": 0.6480509253182832,
+      "within_mean": 0.6480509253182832,
+      "between": NaN,
+      "per_generator": {
+        "stable-diffusion": 0.6480509253182832
+      }
+    }
+  },
+  "logo_mean": 0.4247597797486234
+}

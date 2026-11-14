@@ -69,30 +69,54 @@ def decompose(pred, gt, gens):
             "per_generator": d}
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--seed", type=int, default=0)
-    args = ap.parse_args()
-    X, rows = load()
-    y = np.array([float(r["mos"]) for r in rows])
-    gens = [r["generator"] for r in rows]
-
+def run_seed(X, y, gens, rows, seed):
     out = {}
-    tr, te = split(rows, "random", seed=args.seed)
-    pred, gt = fit_eval(X, y, tr, te, seed=args.seed)
+    tr, te = split(rows, "random", seed=seed)
+    pred, gt = fit_eval(X, y, tr, te, seed=seed)
     out["random"] = decompose(pred, gt, [gens[i] for i in te])
     print("random", json.dumps({k: v for k, v in out["random"].items() if k != "per_generator"}))
 
     logos = {}
     for h in sorted(set(gens)):
         tr, te = split(rows, "logo", holdout=h)
-        pred, gt = fit_eval(X, y, tr, te, seed=args.seed)
+        pred, gt = fit_eval(X, y, tr, te, seed=seed)
         r = decompose(pred, gt, [gens[i] for i in te])
         logos[h] = r
         print(f"logo {h:18s} srcc {r['overall']:.3f}")
     out["logo"] = logos
     out["logo_mean"] = float(np.mean([v["overall"] for v in logos.values()]))
     print("logo mean", round(out["logo_mean"], 3))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seeds", default="0", help="comma separated, e.g. 0,1,2")
+    args = ap.parse_args()
+    seeds = [int(s) for s in args.seeds.split(",") if s.strip()]
+    X, rows = load()
+    y = np.array([float(r["mos"]) for r in rows])
+    gens = [r["generator"] for r in rows]
+
+    per_seed = {}
+    for seed in seeds:
+        print(f"--- seed {seed}")
+        per_seed[str(seed)] = run_seed(X, y, gens, rows, seed)
+        json.dump(per_seed[str(seed)],
+                  open(os.path.join(cfg.RUNS, f"aigciqa2023_protocols_s{seed}.json"),
+                       "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+
+    # combined record: per-seed results plus the mean and spread over seeds
+    rand = [v["random"]["overall"] for v in per_seed.values()]
+    logo = [v["logo_mean"] for v in per_seed.values()]
+    out = {"seeds": seeds,
+           "random_mean": float(np.mean(rand)),
+           "random_std": float(np.std(rand, ddof=1)) if len(rand) > 1 else 0.0,
+           "logo_mean_of_seeds": float(np.mean(logo)),
+           "logo_std": float(np.std(logo, ddof=1)) if len(logo) > 1 else 0.0,
+           "per_seed": per_seed}
+    print(f"\n{len(seeds)} seeds: random {out['random_mean']:.3f} +- {out['random_std']:.3f}, "
+          f"logo {out['logo_mean_of_seeds']:.3f} +- {out['logo_std']:.3f}")
     json.dump(out, open(os.path.join(cfg.RUNS, "aigciqa2023_protocols.json"), "w", encoding="utf-8"),
               indent=2, ensure_ascii=False)
 

@@ -3,8 +3,10 @@
   "protocol": "logo",
   "holdout": "midjourney",
   "seed": 1,
+  "wsr": 0.0,
+  "reliability": false,
   "n_train": 2390,
   "n_test": 592,
-  "srcc": 0.7042195743565622,
-  "plcc": 0.7244444489479065
+  "srcc": 0.708637523803141,
+  "plcc": 0.7210861444473267
 }

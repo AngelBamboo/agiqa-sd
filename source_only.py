@@ -23,6 +23,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--feats", default=cfg.CLIP_3K)
     ap.add_argument("--holdout", default="AttnGAN")
+    ap.add_argument("--out", default="", help="JSON path; 'auto' writes one record per fold into AGIQA_RUNS")
     args = ap.parse_args()
 
     names = open(args.feats.replace(".npy", "_names.txt"), encoding="utf-8").read().split("\n")
@@ -55,6 +56,11 @@ def main():
            "plcc": float(stats.pearsonr(pred, gt).statistic),
            "unique_pred": int(len(np.unique(pred)))}
     print(json.dumps(res, indent=2))
+
+    if args.out:
+        path = (os.path.join(cfg.RUNS, f"source_only_{args.holdout}.json")
+                if args.out == "auto" else args.out)
+        json.dump(res, open(path, "w", encoding="utf-8"), indent=2)
 
 
 if __name__ == "__main__":

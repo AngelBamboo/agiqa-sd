@@ -3,10 +3,10 @@
   "protocol": "logo",
   "holdout": "glide",
   "seed": 0,
-  "wsr": 0.5,
+  "wsr": 0.0,
   "reliability": false,
   "n_train": 2682,
   "n_test": 300,
-  "srcc": 0.7375495690203179,
-  "plcc": 0.7459184527397156
+  "srcc": 0.7504753701664975,
+  "plcc": 0.757836103439331
 }

@@ -1,7 +1,12 @@
-"""Evaluate a model trained on AGIQA-3K against AGIQA-1K (unseen generators).
+"""Evaluate a model trained on AGIQA-3K against another database, without finetuning.
 
 AGIQA-1K contains deepai and dreamStudio images, neither of which appears in
 AGIQA-3K, so this is a clean cross-database + cross-generator test.
+AIGCIQA2023 uses six text-to-image models, also disjoint from AGIQA-3K.
+
+    python train.py --protocol random --seed 0 --save_model weights/3k_rn18.pt
+    python cross_eval.py --weights weights/3k_rn18.pt --dataset 1k
+    python cross_eval.py --weights weights/3k_rn18.pt --dataset 2023
 """
 import argparse
 import csv
@@ -21,14 +26,26 @@ from agiqa.models import QualityNet
 import agiqa.config as cfg
 
 
-class OneK(Dataset):
-    def __init__(self, root, size=224):
+class TargetDB(Dataset):
+    """A scoring-only view of an external database: image, MOS, generator label."""
+
+    def __init__(self, root, dataset, size=224):
         self.items = []
-        with open(os.path.join(root, "AIGC_all.csv"), encoding="utf-8") as f:
-            for r in csv.DictReader(f):
-                p = os.path.join(root, "file", r["Image"])
-                if os.path.exists(p):
-                    self.items.append((p, float(r["Score"]), r["Image"].split("_")[0]))
+        if dataset == "1k":
+            csv_path, img_dir, name_col = "AIGC_all.csv", "file", "Image"
+            with open(os.path.join(root, csv_path), encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    p = os.path.join(root, img_dir, r[name_col])
+                    if os.path.exists(p):
+                        self.items.append((p, float(r["Score"]),
+                                           r[name_col].split("_")[0]))
+        else:
+            csv_path, img_dir = "data.csv", "allimg"
+            with open(os.path.join(root, csv_path), encoding="utf-8") as f:
+                for r in csv.DictReader(f):
+                    p = os.path.join(root, img_dir, r["name"])
+                    if os.path.exists(p):
+                        self.items.append((p, float(r["mos"]), r["generator"]))
         self.size = size
 
     def __len__(self):
@@ -44,7 +61,9 @@ class OneK(Dataset):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--weights", required=True)
-    ap.add_argument("--root", default=cfg.DATA_1K)
+    ap.add_argument("--dataset", default="1k", choices=["1k", "2023"],
+                    help="which database to evaluate on")
+    ap.add_argument("--root", default="")
     ap.add_argument("--size", type=int, default=224)
     ap.add_argument("--out", default="")
     args = ap.parse_args()
@@ -54,7 +73,8 @@ def main():
     model.load_state_dict(torch.load(args.weights, map_location=device))
     model.eval()
 
-    ds = OneK(args.root, args.size)
+    root = args.root or (cfg.DATA_1K if args.dataset == "1k" else cfg.DATA_2023)
+    ds = TargetDB(root, args.dataset, args.size)
     loader = DataLoader(ds, batch_size=64, shuffle=False)
     preds, gts, gens = [], [], []
     with torch.no_grad():
@@ -73,7 +93,10 @@ def main():
         if sel.sum() > 20:
             per[g] = {"n": int(sel.sum()),
                       "srcc": float(stats.spearmanr(gts[sel], preds[sel]).statistic)}
-    res = {"dataset": "AGIQA-1K", "n": len(ds), **m, "per_generator": per}
+    label = "AGIQA-1K" if args.dataset == "1k" else "AIGCIQA2023"
+    res = {"dataset": label, "n": len(ds), **m, "per_generator": per,
+           "mean_over_generators": float(np.mean([v["srcc"] for v in per.values()]))
+           if per else None}
     print(json.dumps(res, indent=2, ensure_ascii=False))
     if args.out:
         json.dump(res, open(args.out, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
