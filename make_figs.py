@@ -16,7 +16,7 @@ plt.rcParams.update({
     "figure.dpi": 300, "savefig.dpi": 300, "savefig.bbox": "tight",
 })
 
-OUT = r"C:\Users\Angel_Bamboo\ClawsGO\project-20261113-1\manuscript\figs"
+OUT = cfg.FIGURES
 os.makedirs(OUT, exist_ok=True)
 
 C_MAIN = "#3b6ea5"

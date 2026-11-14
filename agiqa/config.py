@@ -9,6 +9,7 @@ elsewhere:
     AGIQA_1K       AGIQA-1K root      (contains AIGC_all.csv and file/)
     AGIQA_FEATURES directory for cached CLIP features
     AGIQA_RUNS     directory for experiment records
+    AGIQA_FIGURES  output directory for the paper figures
 """
 import os
 
@@ -27,6 +28,7 @@ DATA_2023 = _path("AGIQA_2023", os.path.join("data", "aigciqa2023"))
 DATA_1K = _path("AGIQA_1K", os.path.join("data", "agiqa1k"))
 FEATURES = _path("AGIQA_FEATURES", "features")
 RUNS = _path("AGIQA_RUNS", "runs")
+FIGURES = _path("AGIQA_FIGURES", "figs")
 
 CLIP_3K = os.path.join(FEATURES, "agiqa3k_ViT-B-32_openai.npy")
 CLIP_2023 = os.path.join(FEATURES, "aigciqa2023_ViT-B-32_openai.npy")

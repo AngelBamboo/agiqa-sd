@@ -179,12 +179,13 @@ python cross_eval.py --weights <checkpoint>.pt
 **6. Figures**
 
 ```bash
-python make_figs.py
+python make_figs.py          # writes to $AGIQA_FIGURES, default ./figs
 ```
 
 Every script writes a JSON record into `$AGIQA_RUNS`; the files already committed
-under `results/runs/` are those records, so `make_figs.py` reproduces the figures
-from the archive without retraining.
+under `results/runs/` are those records. `make_figs.py` reads them, plus the
+dataset CSVs for the mean-opinion-score panel, so all six figures can be rebuilt
+from the archive without retraining or re-extracting features.
 
 ---
 

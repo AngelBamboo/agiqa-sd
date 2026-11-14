@@ -3,6 +3,7 @@
 !/data/README.md
 /features/
 /runs/
+/figs/
 *.npy
 *.pt
 *.pth
