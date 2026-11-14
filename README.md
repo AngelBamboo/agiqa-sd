@@ -1,8 +1,8 @@
-# Source Confounding in AI-Generated Image Quality Assessment
+# The Pooled SRCC Measures Generators
 
 Code, splits, and per-image predictions for the paper:
 
-> **Source Confounding in AI-Generated Image Quality Assessment: Diagnosis, Protocol, and a Capacity-Based Remedy**
+> **The Pooled SRCC Measures Generators: Diagnosing Source Confounding in AI-Generated Image Quality Assessment**
 
 The claim of the paper is narrow and testable: on two public AI-generated image
 quality databases, the pooled random-split SRCC that almost all published numbers
