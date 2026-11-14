@@ -75,7 +75,9 @@ reliability.py          ceiling on correlation from the released per-image ratin
 probe.py                linear probe: how decodable is the generator from the features
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
 source_only.py          nearest-generator-centroid baseline (no image-level quality regressor)
-paired_source.py        seen-source vs unseen-source on identical test images
+paired_source.py        seen-source vs unseen-source on identical test images (frozen features)
+paired_resnet.py        the same control on the end-to-end ResNet-18
+report.py               print pooled / within-source / between-source SRCC for any prediction file
 score_baselines.py      NIQE / BRISQUE / MUSIQ / CLIP-IQA / TOPIQ reference scores
 extract_features.py     cache CLIP ViT-B/32 features for AGIQA-3K
 extract_2023.py         cache CLIP ViT-B/32 features for AIGCIQA2023
@@ -177,6 +179,7 @@ python nested_ridge.py                    # nested alpha selection, all six fold
 python alpha_sweep.py                     # penalty sensitivity analysis
 python paired_source.py --model ridge     # seen-source vs unseen-source, paired
 python paired_source.py --model mlp --seeds 0,1,2
+python paired_resnet.py --seeds 0         # the same control, end-to-end backbone
 for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python source_only.py --holdout "$g" --out auto   # source-inference control
 done
@@ -255,6 +258,19 @@ model selection. `nested_ridge.py` prints the α chosen per fold.
   year    = {2026}
 }
 ```
+
+## Reporting a model with `report.py`
+
+```bash
+python report.py results/predictions/preds_clip_random.csv
+python report.py results/predictions/preds_clip_logo_*.csv   # one file per held-out generator
+python report.py --json results/predictions/preds_ridge_logo_3k_*.csv
+```
+
+It prints the pooled, within-source and between-source SRCC of each file, and
+the equal-weight mean across files — which is the leave-one-generator-out figure
+when the files are one per held-out generator. Apply it to any new model's
+predictions to see how much of its score comes from ordering sources.
 
 ## License
 
