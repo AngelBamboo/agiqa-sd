@@ -8,6 +8,7 @@ This removes the selection bias of picking alpha on the test source.
 import csv
 import hashlib
 import json
+import os
 import sys
 
 import numpy as np
@@ -20,8 +21,11 @@ ALPHAS = [30, 100, 300, 1000, 3000, 10000, 30000]
 
 
 def load():
-    names = open(os.path.join(cfg.FEATURES, "agiqa3k_ViT-B-32_openai_names.txt"),
-                 encoding="utf-8").read().split("\n")
+    names_path = os.path.join(cfg.FEATURES, "agiqa3k_ViT-B-32_openai_names.txt")
+    if not os.path.exists(names_path):
+        sys.exit("Run extract_features.py first: it writes the feature matrix and "
+                 "the matching image-order file next to it.")
+    names = open(names_path, encoding="utf-8").read().split("\n")
     X = np.load(cfg.CLIP_3K)
     meta = {r["name"]: r for r in csv.DictReader(open(os.path.join(cfg.DATA_3K, "data.csv"), encoding="utf-8"))}
     y = np.array([float(meta[n]["mos_quality"]) for n in names])
@@ -49,9 +53,9 @@ def fit_predict(Xtr, ytr, Xte, alpha):
 
 def main():
     X, y, g, prompts = load()
-    alphas_sorted = ["sd1.5", "AttnGAN", "glide", "xl2.2", "DALLE2", "midjourney"]
+    holdouts = ["sd1.5", "AttnGAN", "glide", "xl2.2", "DALLE2", "midjourney"]
     results = {}
-    for hold in alphas_sorted:
+    for hold in holdouts:
         tr_idx = np.where(g != hold)[0]
         te_idx = np.where(g == hold)[0]
 
