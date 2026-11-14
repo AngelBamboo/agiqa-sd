@@ -8,15 +8,19 @@ The claim of the paper is narrow and testable: on two public AI-generated image
 quality databases, the pooled random-split SRCC that almost all published numbers
 rest on is dominated by the ordering of generators. The same models order the six
 generators of AGIQA-3K perfectly (between-generator SRCC 1.000) while ranking
-images *within* a generator at only 0.52–0.58. Holding a generator out entirely does
-not lower that within-source figure — a paired experiment on identical test images
-moves it by at most 0.02 — so the familiar 0.83 → 0.54 drop is a property of the
-statistic, not a loss of ability. Against an estimated reference ceiling of
-0.90–0.99, models reach 45–77%.
+images *within* a generator at only 0.52–0.58. A paired experiment on identical
+test images gives mean seen-minus-unseen differences of +0.038 (ResNet-18),
+−0.016 (CLIP+MLP) and +0.014 (ridge) — an order of magnitude below the 0.30 gap —
+although individual generators range from −0.25 to +0.11 (Table 5 of the paper).
+The familiar 0.83 → 0.54 drop is therefore a property of the statistic rather than
+a loss of ability. Against an estimated reference ceiling of 0.90–0.99 under the
+stated reliability model, models reach 45–77%.
 
-This repository contains everything needed to reproduce every number, table and
-figure in the paper, plus the full per-image predictions so that the analysis can
-be re-run without retraining.
+The repository contains the code, the split definitions, one JSON record per run
+and the per-image predictions behind every number, table and figure in the paper.
+The committed predictions cover seed 0 for most protocols; the other seeds are
+archived as summary records in `results/runs/`, so they can be inspected and
+re-checked but not re-analysed per image without retraining.
 
 ---
 
@@ -49,10 +53,12 @@ Diagnostics on the random split, where all three model families agree
 | source-inference baseline / CoOp SRCC | 50 % | nearest-centroid label, no image-level quality regressor |
 
 Additional evidence in the paper: a second database (AIGCIQA2023: random 0.815,
-LOGO 0.421), cross-database transfer (AGIQA-3K → AGIQA-1K 0.569, → AIGCIQA2023
-0.600), a capacity study (2 epochs already reach 0.824), a split-half reliability
-analysis with Spearman–Brown correction, and six debiasing attempts of which most
-fail — reported as they are.
+LOGO 0.421, paired seen-minus-unseen +0.037), cross-database transfer (AGIQA-3K →
+AGIQA-1K 0.569, → AIGCIQA2023 0.600), a training-budget study (a ResNet-18 reaches
+0.821 after 2 epochs, seed 0), a reliability estimate based on the released
+per-image rating spread and the reported participant count (ICC(1,k) with
+k = 11/21/31 sensitivity), and six debiasing attempts of which most fail — reported
+as they are.
 
 ---
 
@@ -86,9 +92,13 @@ cross_eval.py           cross-database transfer
 make_figs.py            regenerate every figure from results/runs/
 
 results/summary.csv     the main table above, machine readable
-results/runs/           one JSON record per experiment (119 files)
+results/runs/           one JSON record per experiment (133 files), including the
+                        paired seen/unseen runs for all three test splits, with and
+                        without source-balanced targets, and the AIGCIQA2023 paired run
 results/predictions/    per-image predictions (50 CSV files: random split, six LOGO
-                        folds for ResNet-18 / CLIP+MLP / CoOp / ridge, and the 2023 protocol runs)
+                        folds for ResNet-18 / CLIP+MLP / CoOp / ridge, and the 2023
+                        protocol runs). Seed 0 unless the file name or a `seed`
+                        column says otherwise.
 data/                   put the datasets here (not shipped, see below)
 figs/                   created by make_figs.py
 ```
@@ -179,6 +189,8 @@ python nested_ridge.py                    # nested alpha selection, all six fold
 python alpha_sweep.py                     # penalty sensitivity analysis
 python paired_source.py --model ridge     # seen-source vs unseen-source, paired
 python paired_source.py --model mlp --seeds 0,1,2
+python paired_source.py --model ridge --normalize source --split_seed 0   # source-balanced targets
+python paired_source.py --model mlp   --normalize source --split_seed 0
 python paired_resnet.py --seeds 0         # the same control, end-to-end backbone
 for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python source_only.py --holdout "$g" --out auto   # source-inference control
@@ -231,6 +243,12 @@ from the archive without retraining or re-extracting features.
   AGIQA work. Images from the same generator appear in both halves.
 * **prompt** — grouped by prompt text, so no prompt is shared between train and
   test. Generator identity still overlaps.
+* **paired seen/unseen** — a fixed 20% of each generator is scored twice, once by
+  a head trained on the other five generators, once by a head trained on those
+  plus the target generator's remaining 80%. The test images are identical in the
+  two arms. These test sets are smaller than a LOGO fold, which uses every image
+  of the held-out generator, so levels are not directly comparable between the
+  two; the paired differences are.
 * **logo** — one generator held out entirely. Prompt overlap is *not* removed:
   prompts are shared across generators, so the same prompt can still appear in
   both halves, paired with a different generator's image. Excluding both at once
@@ -250,14 +268,18 @@ model selection. `nested_ridge.py` prints the α chosen per fold.
 ## Citation
 
 ```bibtex
-@article{agiqa_source_confounding,
-  title   = {Source Confounding in AI-Generated Image Quality Assessment:
-             Diagnosis, Protocol, and a Capacity-Based Remedy},
-  author  = {TODO},
-  journal = {TODO},
-  year    = {2026}
+@unpublished{shao2026pooled,
+  title  = {The Pooled SRCC Measures Generators: Diagnosing Source Confounding
+            in AI-Generated Image Quality Assessment},
+  author = {Shao, Yu},
+  year   = {2026},
+  note   = {Manuscript; code and results at
+            https://github.com/AngelBamboo/agiqa-source-confound},
+  url    = {https://github.com/AngelBamboo/agiqa-source-confound}
 }
 ```
+
+Journal and volume are filled in if and when the paper is accepted.
 
 ## Reporting a model with `report.py`
 
