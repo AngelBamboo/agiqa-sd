@@ -5,11 +5,14 @@ Code, splits, and per-image predictions for the paper:
 > **Source Confounding in AI-Generated Image Quality Assessment: Diagnosis, Protocol, and a Capacity-Based Remedy**
 
 The claim of the paper is narrow and testable: on two public AI-generated image
-quality databases, models trained with the standard random split almost entirely
-learn *which generator produced an image*, not *how good the image is*. Under
-leave-one-generator-out (LOGO) evaluation the same models lose roughly a third of
-their correlation, and — once the reliability of the subjective scores is accounted
-for — they exploit only about half of the ranking signal the annotations allow.
+quality databases, the pooled random-split SRCC that almost all published numbers
+rest on is dominated by the ordering of generators. The same models order the six
+generators of AGIQA-3K perfectly (between-generator SRCC 1.000) while ranking
+images *within* a generator at only 0.52–0.58. Holding a generator out entirely does
+not lower that within-source figure — a paired experiment on identical test images
+moves it by at most 0.02 — so the familiar 0.83 → 0.54 drop is a property of the
+statistic, not a loss of ability. Against an estimated reference ceiling of
+0.90–0.99, models reach 45–77%.
 
 This repository contains everything needed to reproduce every number, table and
 figure in the paper, plus the full per-image predictions so that the analysis can
@@ -26,8 +29,8 @@ the six held-out generators (SD 1.5, Midjourney, GLIDE, AttnGAN, SDXL, DALL·E 2
 |---|---|---:|---|
 | Random 80/20 | ResNet-18 | 0.830 ± 0.013 | trained from ImageNet init |
 | Random 80/20 | CLIP ViT-B/32 + MLP | 0.832 ± 0.028 | frozen features |
-| Random 80/20 | CoOp (16 ctx tokens) | 0.846 ± 0.020 | frozen features + prompts |
-| Random 80/20 | Ridge (α = 1000) | **0.849 ± 0.019** | frozen features |
+| Random 80/20 | CoOp (16 ctx tokens) | 0.846 ± 0.025 | frozen features + prompts |
+| Random 80/20 | Ridge (α = 1000) | **0.849 ± 0.023** | frozen features |
 | Prompt-grouped | ResNet-18 | 0.813 ± 0.013 | trained |
 | LOGO | ResNet-18 | 0.523 | trained |
 | LOGO | CLIP ViT-B/32 + MLP | 0.544 | frozen features |
@@ -43,7 +46,7 @@ Diagnostics on the random split, where all three model families agree
 | within-source SRCC | 0.518 | equal-weight mean over the six generators |
 | between-source SRCC | 1.000 | ranking of the six generator means |
 | variance explained by source identity | 57.5 % | a property of the database, model-independent |
-| source-only control / CoOp SRCC | 50 % | nearest-centroid classifier that never sees quality |
+| source-inference baseline / CoOp SRCC | 50 % | nearest-centroid label, no image-level quality regressor |
 
 Additional evidence in the paper: a second database (AIGCIQA2023: random 0.815,
 LOGO 0.421), cross-database transfer (AGIQA-3K → AGIQA-1K 0.569, → AIGCIQA2023
@@ -71,7 +74,8 @@ alpha_sweep.py          sensitivity of the ridge readout to its penalty
 reliability.py          ceiling on correlation from the released per-image rating spread
 probe.py                linear probe: how decodable is the generator from the features
 capacity_study.py       how fast the shortcut is learned (epoch budget sweep)
-source_only.py          nearest-generator-centroid control (no quality signal)
+source_only.py          nearest-generator-centroid baseline (no image-level quality regressor)
+paired_source.py        seen-source vs unseen-source on identical test images
 score_baselines.py      NIQE / BRISQUE / MUSIQ / CLIP-IQA / TOPIQ reference scores
 extract_features.py     cache CLIP ViT-B/32 features for AGIQA-3K
 extract_2023.py         cache CLIP ViT-B/32 features for AIGCIQA2023
@@ -80,8 +84,9 @@ cross_eval.py           cross-database transfer
 make_figs.py            regenerate every figure from results/runs/
 
 results/summary.csv     the main table above, machine readable
-results/runs/           one JSON record per experiment (116 files)
-results/predictions/    per-image predictions (12 CSV files)
+results/runs/           one JSON record per experiment (119 files)
+results/predictions/    per-image predictions (50 CSV files: random split, six LOGO
+                        folds for ResNet-18 / CLIP+MLP / CoOp / ridge, and the 2023 protocol runs)
 data/                   put the datasets here (not shipped, see below)
 figs/                   created by make_figs.py
 ```
@@ -170,6 +175,8 @@ for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
 done
 python nested_ridge.py                    # nested alpha selection, all six folds
 python alpha_sweep.py                     # penalty sensitivity analysis
+python paired_source.py --model ridge     # seen-source vs unseen-source, paired
+python paired_source.py --model mlp --seeds 0,1,2
 for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python source_only.py --holdout "$g" --out auto   # source-inference control
 done
@@ -231,8 +238,8 @@ The `within` / `between` / `overall` figures are diagnostic summaries, not a
 variance decomposition: SRCC is a rank statistic, so the overall value is not a
 weighted sum of the other two.
 
-Hyperparameters (ridge α, CoOp learning rate) are selected by nested validation
-inside the training sources only — the held-out generator never participates in
+The ridge penalty is selected by leave-one-source-out validation inside the
+training sources only; the CoOp learning rate is a fixed preset — the held-out generator never participates in
 model selection. `nested_ridge.py` prints the α chosen per fold.
 
 ---

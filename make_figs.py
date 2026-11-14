@@ -94,14 +94,15 @@ def fig2_protocol():
     """Random-split vs LOGO, per generator, for the CLIP readout."""
     folds = logo_folds("clip")
     rnd = [run_record(f"clip_random_all_s{s}.json")["srcc"] for s in range(3)]
+    within_random = split_stats(os.path.join(cfg.PREDICTIONS, "preds_clip_random.csv"))[1]
     control = [run_record(f"source_only_{g}.json")["srcc"] for g in GENS]
 
     fig, ax = plt.subplots(figsize=(3.4, 2.4))
     x = np.arange(len(GENS))
     ax.bar(x, [folds[g][0] for g in GENS], yerr=[folds[g][1] for g in GENS],
            capsize=2.5, color=C_MAIN, width=0.6, label="leave-one-generator-out")
-    ax.axhline(np.mean(rnd), ls="--", color=C_ACC, lw=1.2,
-               label=f"random split ({np.mean(rnd):.3f})")
+    ax.axhline(within_random, ls="--", color=C_ACC, lw=1.2,
+               label=f"within-source, random split ({within_random:.3f})")
     ax.axhline(np.mean(control), ls=":", color=C_GREY, lw=1.4,
                label=f"source-only control ({np.mean(control):.3f})")
     ax.set_xticks(x)

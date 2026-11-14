@@ -102,6 +102,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset", default="3k", choices=["3k", "2023"])
     ap.add_argument("--seed", type=int, default=0, help="random-split seed")
+    ap.add_argument("--dump_dir", default="",
+                    help="write per-image predictions for every fold into this directory")
     ap.add_argument("--inner", default="source", choices=["source", "prompt"],
                     help="inner validation grouping; 'source' holds out one training generator")
     args = ap.parse_args()
@@ -116,6 +118,16 @@ def main():
         best, mean_scores = select_alpha(X, y, tr_idx, prompts, g, inner=args.inner)
         pred = fit_predict(X[tr_idx], y[tr_idx], X[te_idx], best)
         srcc = float(stats.spearmanr(pred, y[te_idx]).statistic)
+        if args.dump_dir:
+            import csv as _csv
+            os.makedirs(args.dump_dir, exist_ok=True)
+            tag = "3k" if args.dataset == "3k" else "2023"
+            with open(os.path.join(args.dump_dir, f"preds_ridge_logo_{tag}_{hold}.csv"),
+                      "w", newline="", encoding="utf-8") as fh:
+                w = _csv.writer(fh)
+                w.writerow(["generator", "mos", "pred"])
+                for k, i in enumerate(te_idx):
+                    w.writerow([g[i], float(y[i]), float(pred[k])])
         results[hold] = {"n_test": int(len(te_idx)), "alpha_selected": best,
                          "inner_srcc": mean_scores[best], "srcc": srcc}
         print(f"{hold:18s} n={len(te_idx):4d} alpha*={best:6d} "

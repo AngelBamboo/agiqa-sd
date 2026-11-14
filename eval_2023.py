@@ -69,11 +69,24 @@ def decompose(pred, gt, gens):
             "per_generator": d}
 
 
-def run_seed(X, y, gens, rows, seed):
+def dump_csv(path, gens, y, pred, protocol, holdout, seed):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["generator", "mos", "pred", "protocol", "fold", "seed"])
+        for k in range(len(y)):
+            w.writerow([gens[k], float(y[k]), float(pred[k]), protocol, holdout or "-", seed])
+
+
+def run_seed(X, y, gens, rows, seed, dump_dir=""):
     out = {}
     tr, te = split(rows, "random", seed=seed)
     pred, gt = fit_eval(X, y, tr, te, seed=seed)
     out["random"] = decompose(pred, gt, [gens[i] for i in te])
+    if dump_dir:
+        te_gens = [gens[i] for i in te]
+        dump_csv(os.path.join(dump_dir, f"preds_clip_2023_random_s{seed}.csv"),
+                 te_gens, gt, pred, "random", None, seed)
     print("random", json.dumps({k: v for k, v in out["random"].items() if k != "per_generator"}))
 
     logos = {}
@@ -82,6 +95,9 @@ def run_seed(X, y, gens, rows, seed):
         pred, gt = fit_eval(X, y, tr, te, seed=seed)
         r = decompose(pred, gt, [gens[i] for i in te])
         logos[h] = r
+        if dump_dir:
+            dump_csv(os.path.join(dump_dir, f"preds_clip_2023_logo_{h}_s{seed}.csv"),
+                     [gens[i] for i in te], gt, pred, "logo", h, seed)
         print(f"logo {h:18s} srcc {r['overall']:.3f}")
     out["logo"] = logos
     out["logo_mean"] = float(np.mean([v["overall"] for v in logos.values()]))
@@ -92,6 +108,7 @@ def run_seed(X, y, gens, rows, seed):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", default="0", help="comma separated, e.g. 0,1,2")
+    ap.add_argument("--dump_dir", default="", help="write per-image predictions here")
     args = ap.parse_args()
     seeds = [int(s) for s in args.seeds.split(",") if s.strip()]
     X, rows = load()
@@ -101,7 +118,7 @@ def main():
     per_seed = {}
     for seed in seeds:
         print(f"--- seed {seed}")
-        per_seed[str(seed)] = run_seed(X, y, gens, rows, seed)
+        per_seed[str(seed)] = run_seed(X, y, gens, rows, seed, args.dump_dir)
         json.dump(per_seed[str(seed)],
                   open(os.path.join(cfg.RUNS, f"aigciqa2023_protocols_s{seed}.json"),
                        "w", encoding="utf-8"), indent=2, ensure_ascii=False)

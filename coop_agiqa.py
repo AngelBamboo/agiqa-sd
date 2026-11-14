@@ -163,7 +163,14 @@ def main():
         holds = [None] if proto == "random" else ["sd1.5", "AttnGAN", "glide", "xl2.2", "DALLE2", "midjourney"]
         for h in holds:
             for s in seeds:
-                dump = args.dump if (args.dump and proto == "random" and s == 0) else ""
+                dump = ""
+                if args.dump and s == 0:
+                    if args.dump.lower().endswith(".csv"):
+                        dump = args.dump
+                    else:
+                        os.makedirs(args.dump, exist_ok=True)
+                        dump = os.path.join(args.dump, f"preds_coop_{proto}_"
+                                                      f"{h if h else 'all'}_s{s}.csv")
                 r = run(proto, h, s, args.epochs, args.lr, dump)
                 results.append(r)
                 print(f"{proto:7s} {str(h or '-'):10s} s{s} srcc {r['srcc']:.3f}"

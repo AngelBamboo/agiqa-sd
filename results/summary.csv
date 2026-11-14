@@ -11,5 +11,5 @@ logo,Ridge(a=1000),AGIQA-3K,0.5794614129675336,,results/runs/nested_ridge.json
 random,CLIP+MLP,AIGCIQA2023,0.815,,results/runs/aigciqa2023_protocols.json
 logo,CLIP+MLP,AIGCIQA2023,0.421,,results/runs/aigciqa2023_protocols.json
 random,Ridge(a=1000),AIGCIQA2023,0.829,,results/runs/nested_ridge_2023.json
-logo,Ridge(a=1000),AIGCIQA2023,0.456,,results/runs/nested_ridge_2023.json
+logo,Ridge(a=1000),AIGCIQA2023,0.453,,results/runs/nested_ridge_2023.json
 cross_db,CLIP+MLP,3K->1K,0.569,,results/runs/cross_1k.json
