@@ -51,6 +51,7 @@ Diagnostics on the random split, where all three model families agree
 | between-source SRCC | 1.000 | ranking of the six generator means |
 | variance explained by source identity | 57.5 % | a property of the database, model-independent |
 | source-inference baseline / CoOp SRCC | 50 % | nearest-centroid label, no image-level quality regressor |
+| cross-source share of Kendall's net agreement | 83.4 % | pairs joining two generators are 75.8 % of the test set |
 
 Additional evidence in the paper: a second database (AIGCIQA2023: random 0.815,
 LOGO 0.421, paired seen-minus-unseen +0.037), cross-database transfer (AGIQA-3K →
