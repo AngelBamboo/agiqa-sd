@@ -92,7 +92,12 @@ def main():
             se_scores.append(stats.spearmanr(p_se, gt).statistic)
 
         un, se = float(np.mean(un_scores)), float(np.mean(se_scores))
-        out[g] = {"n_test": int(len(test_idx)), "unseen": un, "seen": se, "diff": se - un}
+        per_seed = [{"seed": s, "unseen": float(u), "seen": float(v), "diff": float(v - u)}
+                    for s, u, v in zip(seeds, un_scores, se_scores)]
+        out[g] = {"n_test": int(len(test_idx)), "unseen": un, "seen": se, "diff": se - un,
+                  "unseen_sd": float(np.std(un_scores, ddof=1)) if len(seeds) > 1 else 0.0,
+                  "seen_sd": float(np.std(se_scores, ddof=1)) if len(seeds) > 1 else 0.0,
+                  "per_seed": per_seed}
         print(f"{g:11s} {len(test_idx):7d} {un:7.3f} {se:7.3f} {se - un:+7.3f} "
               f"{time.time() - t0:6.0f}", flush=True)
 

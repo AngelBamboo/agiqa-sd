@@ -146,6 +146,15 @@ def main():
     random_srcc = float(stats.spearmanr(pred, y[te_idx]).statistic)
     print(f"random split       alpha*={best:6d} inner={mean_scores[best]:.3f} "
           f"test={random_srcc:.3f}")
+    if args.dump_dir:
+        os.makedirs(args.dump_dir, exist_ok=True)
+        tag = "3k" if args.dataset == "3k" else "2023"
+        with open(os.path.join(args.dump_dir, f"preds_ridge_random_{tag}.csv"),
+                  "w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["name", "generator", "mos", "pred"])
+            for j, i in enumerate(te_idx):
+                w.writerow([f"{g[i]}_{i:05d}", g[i], float(y[i]), float(pred[j])])
 
     out = {"logo": results,
            "logo_mean": float(np.mean(vals)),

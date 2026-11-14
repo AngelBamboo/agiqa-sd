@@ -40,6 +40,56 @@ def read_predictions(path):
     return pred, gt, gen
 
 
+def pair_counts(x, y, chunk=256):
+    """Concordant, discordant and tied pairs of (x, y), over i < j."""
+    n = len(x)
+    conc = disc = tied = 0
+    for start in range(0, n, chunk):
+        stop = min(start + chunk, n)
+        dx = np.sign(x[start:stop, None] - x[None, :])
+        dy = np.sign(y[start:stop, None] - y[None, :])
+        keep = np.triu(np.ones((stop - start, n), dtype=bool), k=start + 1)
+        s = (dx * dy)[keep]
+        conc += int((s > 0).sum())
+        disc += int((s < 0).sum())
+        tied += int((s == 0).sum())
+    return conc, disc, tied
+
+
+def pair_decomposition(pred, gt, gen, min_per_generator=30):
+    """Split Kendall's tau into the same-source and cross-source pair sets.
+
+    Kendall's tau is a (pair-count weighted) average of the sign agreement over
+    pairs, so the pairs can be partitioned by whether the two images share a
+    generator without approximation. Spearman's rho has no such exact
+    decomposition, which is why this diagnostic is reported in tau.
+    """
+    c_all, d_all, t_all = pair_counts(pred, gt)
+    c_in = d_in = t_in = 0
+    for g in sorted(set(gen)):
+        sel = gen == g
+        if sel.sum() < min_per_generator:
+            continue
+        c, d, t = pair_counts(pred[sel], gt[sel])
+        c_in += c
+        d_in += d
+        t_in += t
+    c_out, d_out, t_out = c_all - c_in, d_all - d_in, t_all - t_in
+
+    def tau(c, d, t):
+        den = c + d + t
+        return float((c - d) / den) if den else float("nan")
+
+    n_in, n_out = c_in + d_in + t_in, c_out + d_out + t_out
+    return {"tau_all": tau(c_all, d_all, t_all),
+            "tau_within": tau(c_in, d_in, t_in),
+            "tau_cross": tau(c_out, d_out, t_out),
+            "pair_share_cross": float(n_out / (n_in + n_out)),
+            "cross_share_of_net": float((c_out - d_out) / (c_all - d_all))
+            if (c_all - d_all) else float("nan"),
+            "n_pairs_same": int(n_in), "n_pairs_cross": int(n_out)}
+
+
 def summarise(pred, gt, gen, min_per_generator=30):
     """Pooled, within-source and between-source SRCC of one prediction file."""
     pooled = float(stats.spearmanr(pred, gt).statistic)
@@ -64,20 +114,35 @@ def main():
     ap.add_argument("files", nargs="+")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     ap.add_argument("--label", default="", help="name used in the JSON output")
+    ap.add_argument("--pairs", action="store_true",
+                    help="also split Kendall's tau into same-source and cross-source pairs")
     args = ap.parse_args()
 
     per_file = []
     for path in args.files:
         pred, gt, gen = read_predictions(path)
         res = summarise(pred, gt, gen)
+        if args.pairs:
+            res.update(pair_decomposition(pred, gt, gen))
         res["file"] = os.path.basename(path)
         per_file.append(res)
 
     if not args.json:
-        print(f"{'file':44s} {'n':>6s} {'pooled':>7s} {'within':>7s} {'between':>8s}")
-        for r in per_file:
-            print(f"{r['file']:44s} {r['n']:6d} {r['pooled']:7.3f} "
-                  f"{r['within']:7.3f} {r['between']:8.3f}")
+        if args.pairs:
+            print(f"{'file':40s} {'tau':>6s} {'same':>6s} {'cross':>6s} "
+                  f"{'pairs%':>6s} {'net%':>6s}")
+            for r in per_file:
+                print(f"{r['file']:40s} {r['tau_all']:6.3f} {r['tau_within']:6.3f} "
+                      f"{r['tau_cross']:6.3f} {100 * r['pair_share_cross']:6.1f} "
+                      f"{100 * r['cross_share_of_net']:6.1f}")
+            print("(pairs% = share of test pairs that join two generators; "
+                  "net% = share of the net concordant-minus-discordant count "
+                  "contributed by those pairs)")
+        else:
+            print(f"{'file':44s} {'n':>6s} {'pooled':>7s} {'within':>7s} {'between':>8s}")
+            for r in per_file:
+                print(f"{r['file']:44s} {r['n']:6d} {r['pooled']:7.3f} "
+                      f"{r['within']:7.3f} {r['between']:8.3f}")
 
     out = {"files": per_file}
     if len(per_file) > 1:

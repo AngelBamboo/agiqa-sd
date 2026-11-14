@@ -9,9 +9,9 @@ quality databases, the pooled random-split SRCC that almost all published number
 rest on is dominated by the ordering of generators. The same models order the six
 generators of AGIQA-3K perfectly (between-generator SRCC 1.000) while ranking
 images *within* a generator at only 0.52–0.58. A paired experiment on identical
-test images gives mean seen-minus-unseen differences of +0.038 (ResNet-18),
+test images gives mean seen-minus-unseen differences of +0.019 (ResNet-18),
 −0.016 (CLIP+MLP) and +0.014 (ridge) — an order of magnitude below the 0.30 gap —
-although individual generators range from −0.25 to +0.11 (Table 5 of the paper).
+although individual generators range from −0.25 to +0.12 (Table 5 of the paper).
 The familiar 0.83 → 0.54 drop is therefore a property of the statistic rather than
 a loss of ability. Against an estimated reference ceiling of 0.90–0.99 under the
 stated reliability model, models reach 45–77%.
@@ -92,10 +92,10 @@ cross_eval.py           cross-database transfer
 make_figs.py            regenerate every figure from results/runs/
 
 results/summary.csv     the main table above, machine readable
-results/runs/           one JSON record per experiment (133 files), including the
+results/runs/           one JSON record per experiment (136 files), including the
                         paired seen/unseen runs for all three test splits, with and
                         without source-balanced targets, and the AIGCIQA2023 paired run
-results/predictions/    per-image predictions (50 CSV files: random split, six LOGO
+results/predictions/    per-image predictions (51 CSV files: random split, six LOGO
                         folds for ResNet-18 / CLIP+MLP / CoOp / ridge, and the 2023
                         protocol runs). Seed 0 unless the file name or a `seed`
                         column says otherwise.
@@ -135,7 +135,7 @@ Expected layout:
 
 ```
 data/agiqa3k/         data.csv  images/
-data/aigciqa2023/     data.csv  allimg/          (per-image rater scores in the JSON index)
+data/aigciqa2023/     data.csv  allimg/          (aggregate MOS only; no per-rater scores)
 data/agiqa1k/         AIGC_all.csv  file/
 ```
 
@@ -191,14 +191,14 @@ python paired_source.py --model ridge     # seen-source vs unseen-source, paired
 python paired_source.py --model mlp --seeds 0,1,2
 python paired_source.py --model ridge --normalize source --split_seed 0   # source-balanced targets
 python paired_source.py --model mlp   --normalize source --split_seed 0
-python paired_resnet.py --seeds 0         # the same control, end-to-end backbone
+python paired_resnet.py --seeds 0,1,2     # the same control, end-to-end backbone
 for g in sd1.5 midjourney AttnGAN glide xl2.2 DALLE2; do
   python source_only.py --holdout "$g" --out auto   # source-inference control
 done
 ```
 
 `train.py` defaults to the 20-epoch budget used for every ResNet-18 number in the
-paper. The four ResNet debiasing variants of Table 12 use the same folds with one
+paper. The four ResNet debiasing variants of Table 13 use the same folds with one
 flag added:
 
 ```bash
@@ -287,12 +287,15 @@ Journal and volume are filled in if and when the paper is accepted.
 python report.py results/predictions/preds_clip_random.csv
 python report.py results/predictions/preds_clip_logo_*.csv   # one file per held-out generator
 python report.py --json results/predictions/preds_ridge_logo_3k_*.csv
+python report.py --pairs results/predictions/preds_clip_random.csv
 ```
 
 It prints the pooled, within-source and between-source SRCC of each file, and
 the equal-weight mean across files — which is the leave-one-generator-out figure
 when the files are one per held-out generator. Apply it to any new model's
-predictions to see how much of its score comes from ordering sources.
+predictions to see how much of its score comes from ordering sources. 
+
+`--pairs` adds the exact pair decomposition of Kendall's tau: tau over pairs that share a generator, tau over pairs that do not, and the share of the net concordant-minus-discordant count contributed by cross-generator pairs. On the AGIQA-3K random split 75.8% of pairs join two generators, and they carry 83.4% of the net count for every one of the four models tested.
 
 ## License
 
