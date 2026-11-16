@@ -1,0 +1,11 @@
+database     csv rows  loaded  missing
+agiqa3k          2982    2982        0
+  generators: AttnGAN 300, DALLE2 290, glide 300, midjourney 592, sd1.5 1200, xl2.2 300
+  MOS range: 0.000 to 4.489
+aigciqa2023      2400    2400        0
+  generators: Controlnet 400, DALLE 400, Glide 400, Lafite 400, Unidiffuser 400, stable-diffusion 400
+  MOS range: 0.266 to 0.721
+agiqa1k          1080    1079        1
+  generators: deepai 720, dreamStudio 359
+  rows without an image file: dreamStudio_8_9_1_.jpg
+  MOS range: 0.091 to 5.000

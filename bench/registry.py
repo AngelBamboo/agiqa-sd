@@ -22,20 +22,22 @@ PYIQA_MODELS = {
     # IL-NIQE is excluded from the default matrix: it runs at ~1 image/s and its
     # SVD fails on a handful of generated images, which poisons the CUDA context.
     # "ilniqe": ("classical", True, "integrated local NIQE"),
-    # CNN regressors trained on natural-scene IQA
+    # CNN-based regressors: natural-scene IQA training or a self-supervised
+    # ResNet-50 encoder, with attention or linear readout on top.
+    "topiq_nr": ("cnn", False, "ResNet-50 + top-down cross-scale attention"),
+    "arniqa": ("cnn", False, "self-supervised ResNet-50 + ridge"),
     "cnniqa": ("cnn", False, "small CNN, LIVE-trained"),
     "dbcnn": ("cnn", False, "dual-branch CNN"),
     "nima": ("cnn", False, "NIMA, AVA-trained"),
     "hyperiqa": ("cnn", False, "hypernetwork, content-adaptive"),
-    "tres": ("transformer", False, "transformer + relative ranking"),
-    # transformer / CLIP-based
+    # transformer-based
+    "tres": ("transformer", False, "ResNet-50 + transformer, relative ranking"),
     "musiq": ("transformer", False, "multi-scale ViT"),
     "maniqa": ("transformer", False, "multi-dimension attention"),
-    "topiq_nr": ("transformer", False, "TOPIQ no-reference"),
+    # CLIP / vision-language
     "clipiqa": ("clip", False, "CLIP-IQA"),
     "clipiqa+": ("clip", False, "CLIP-IQA+"),
     "qualiclip": ("clip", False, "quality-aware CLIP"),
-    "arniqa": ("transformer", False, "ARNIQA"),
     "liqe": ("clip", False, "vision-language, multi-task"),
     # optional, large: uncomment to include the 7B assessor
     # "qalign": ("llm", False, "Q-Align, mPLUG-Owl2-7B"),

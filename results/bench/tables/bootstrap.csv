@@ -68,9 +68,6 @@ agiqa3k,dbcnn,between,0.7714,0.7714,0.7714
 agiqa3k,hyperiqa,pooled,0.6392,0.6224,0.6594
 agiqa3k,hyperiqa,within,0.235,0.1974,0.273
 agiqa3k,hyperiqa,between,0.7714,0.7714,0.8871
-agiqa3k,ilniqe,pooled,0.5988,0.5772,0.6203
-agiqa3k,ilniqe,within,0.4436,0.4008,0.4785
-agiqa3k,ilniqe,between,0.7143,0.4857,0.7157
 agiqa3k,liqe,pooled,0.6974,0.6838,0.7125
 agiqa3k,liqe,within,0.3736,0.3362,0.4097
 agiqa3k,liqe,between,0.7714,0.7714,0.8857

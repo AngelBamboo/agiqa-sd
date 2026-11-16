@@ -73,6 +73,15 @@ On Windows, set the same names as environment variables.
 The images are not redistributed here. Download each database from its release
 and point the environment variables above at the unpacked folders.
 
+Run `python scripts/check_datasets.py` after unpacking: it prints the row count
+of each released CSV, the number of items the loaders return, the generator
+counts and any row without an image file. The current releases give 2,982 and
+2,400 items for AGIQA-3K and AIGCIQA2023, and 1,079 of 1,080 for AGIQA-1K — its
+CSV lists dreamStudio_8_9_1_.jpg, which has no image file, while
+dreamStudio_8_9_1_0.jpg and dreamStudio_8_9_1_1.jpg exist with their own scores.
+That row is skipped rather than remapped. The audit output is kept in
+`results/bench/dataset_audit.txt`.
+
 | Database | Link |
 |---|---|
 | AGIQA-3K | https://github.com/lcysyzxdxc/AGIQA-3K |

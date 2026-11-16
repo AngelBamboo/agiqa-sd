@@ -1,10 +1,10 @@
 model,family,pooled_srcc,pooled_plcc,within_srcc,between_srcc,logo_srcc,rank_pooled,rank_within
 clip_mlp,clip,0.8131,0.8138,0.4412,0.9429,0.4309,1,1
 liqe,clip,0.7668,0.7876,0.3837,0.9429,,2,2
-topiq_nr,transformer,0.7509,0.7724,0.3314,0.9429,,3,5
+topiq_nr,cnn,0.7509,0.7724,0.3314,0.9429,,3,5
 tres,transformer,0.7379,0.7651,0.2954,0.9429,,4,7
 musiq,transformer,0.7358,0.7516,0.3011,0.9429,,5,6
-arniqa,transformer,0.7276,0.7276,0.2741,0.9429,,6,9
+arniqa,cnn,0.7276,0.7276,0.2741,0.9429,,6,9
 hyperiqa,cnn,0.7261,0.7523,0.2809,0.9429,,7,8
 clipiqa+,clip,0.7158,0.716,0.3424,0.9429,,8,4
 dbcnn,cnn,0.7047,0.7365,0.2303,0.7714,,9,10

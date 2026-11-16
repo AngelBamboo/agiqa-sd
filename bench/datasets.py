@@ -19,6 +19,10 @@ _ENV = {
     "agiqa1k": "AGIQA_1K",
 }
 
+# Rows dropped because the release has no image file for them, keyed by database.
+# Populated by the loaders so a data audit can report what was excluded.
+SKIPPED = {}
+
 
 def root(name):
     """Resolve a database root from the environment, then the known locations."""
@@ -77,13 +81,22 @@ def load_aigciqa2023():
 
 
 def load_agiqa1k():
-    """AGIQA-1K ships one CSV with image names and scores; no prompt column."""
+    """AGIQA-1K ships one CSV with image names and scores; no prompt column.
+
+    The distributed CSV lists 1,080 score entries but the archive holds 1,079
+    matching image files.  The entry ``dreamStudio_8_9_1_.jpg`` has no file of
+    that name, while ``dreamStudio_8_9_1_0.jpg`` and ``dreamStudio_8_9_1_1.jpg``
+    are both present with their own scores, so the row is treated as a naming
+    error in the release rather than remapped.  Skipped rows are recorded in
+    ``SKIPPED`` and reported by ``scripts/check_datasets.py``.
+    """
     base = root("agiqa1k")
     img_dir = os.path.join(base, "file")
     items = []
     for row in _rows(os.path.join(base, "AIGC_all.csv")):
         path = os.path.join(img_dir, row["Image"])
         if not os.path.exists(path):
+            SKIPPED.setdefault("agiqa1k", []).append(row["Image"])
             continue
         items.append({
             "key": row["Image"],

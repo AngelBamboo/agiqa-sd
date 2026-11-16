@@ -1,7 +1,7 @@
 {
   "dataset": "aigciqa2023",
   "model": "topiq_nr",
-  "family": "transformer",
+  "family": "cnn",
   "meta": {
     "lower_better": false,
     "n_scored": 2400,

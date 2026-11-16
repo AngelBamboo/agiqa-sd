@@ -1,7 +1,7 @@
 {
   "dataset": "agiqa1k",
   "model": "topiq_nr",
-  "family": "transformer",
+  "family": "cnn",
   "meta": {
     "lower_better": false,
     "n_scored": 1079,
