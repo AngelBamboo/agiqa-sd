@@ -1,0 +1,8 @@
+{
+  "dataset": "agiqa3k",
+  "seed": 0,
+  "n_test": 597,
+  "source_accuracy": 0.6231155778894473,
+  "pooled_srcc": 0.6398465047625612,
+  "within_mean": 0.114264321563747
+}
