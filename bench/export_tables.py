@@ -15,6 +15,17 @@ import os
 
 import numpy as np
 
+from bench import registry
+
+DISPLAY = {
+    "niqe": "NIQE", "brisque": "BRISQUE", "piqe": "PIQE",
+    "cnniqa": "CNNIQA", "dbcnn": "DBCNN", "nima": "NIMA", "hyperiqa": "HyperIQA",
+    "topiq_nr": "TOPIQ-NR", "arniqa": "ARNIQA",
+    "tres": "TReS", "musiq": "MUSIQ", "maniqa": "MANIQA",
+    "clipiqa": "CLIP-IQA", "clipiqa+": "CLIP-IQA+", "qualiclip": "QualiCLIP", "liqe": "LIQE",
+    "resnet18": "ResNet-18", "clip_mlp": "CLIP+MLP", "coop": "CoOp", "ridge": "ridge",
+}
+
 BENCH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results", "bench")
 SUMMARY = os.path.join(BENCH, "summary")
 TABLES = os.path.join(BENCH, "tables")
@@ -42,9 +53,37 @@ def rank(recs):
     return sorted(recs, key=lambda r: r["rank_pooled"])
 
 
+def model_pool_lines():
+    out = ["## Table S1. Model pool", "",
+           "| Model | Family | Evaluation | Note |",
+           "|---|---|---|---|"]
+    for key, (family, training_free, note) in registry.PYIQA_MODELS.items():
+        out.append(f"| {DISPLAY.get(key, key)} | {family} | training-free, all three databases | {note} |")
+    for key, (family, note) in registry.TRAINED_MODELS.items():
+        out.append(f"| {DISPLAY.get(key, key)} | {family} | trained, AGIQA-3K and AIGCIQA2023 | {note} |")
+    out.append("")
+    return out
+
+
+def bootstrap_lines(models=("nima", "tres", "clipiqa", "niqe")):
+    out = ["## Table S2. Stratified bootstrap intervals on AGIQA-3K (200 resamples)", "",
+           "| Model | Pooled SRCC | 95% CI | Within SRCC | 95% CI |",
+           "|---|---:|---:|---:|---:|"]
+    for name in models:
+        d = json.load(open(os.path.join(BENCH, "bootstrap", f"agiqa3k__{name}.json"), encoding="utf-8"))
+        p, w = d["pooled"], d["within"]
+        out.append(f"| {DISPLAY.get(name, name)} | {p['point']:.3f} | [{p['lo']:.3f}, {p['hi']:.3f}] | "
+                   f"{w['point']:.3f} | [{w['lo']:.3f}, {w['hi']:.3f}] |")
+    out.append("")
+    return out
+
+
 def main():
     os.makedirs(TABLES, exist_ok=True)
-    lines = ["# Supplementary material", "", "Generated from `results/bench`; every number is recomputable with `python -m bench.leaderboard`.", ""]
+    lines = ["# Supplementary material", "",
+             "Generated from `results/bench`; every number is recomputable with `python -m bench.leaderboard`.", ""]
+    lines += model_pool_lines()
+    lines += bootstrap_lines()
 
     for ds in ("agiqa3k", "aigciqa2023", "agiqa1k"):
         recs = rank(records(ds))
