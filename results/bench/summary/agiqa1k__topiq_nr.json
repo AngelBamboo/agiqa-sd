@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "topiq_nr",
+  "family": "transformer",
+  "meta": {
+    "lower_better": false,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 21.0
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.3912116767220598,
+    "plcc": 0.41694239446425396,
+    "krcc": 0.2644485033453031
+  },
+  "within_mean": 0.12383913290671467,
+  "within_weighted": 0.06817047741360965,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": -0.042550006364920505,
+      "plcc": -0.025150549004145713,
+      "krcc": -0.028272173852843287,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": 0.602403602624933
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.29022827217834984,
+      "plcc": 0.2700568392294163,
+      "krcc": 0.19222772177057848,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": 0.3934307388110413
+    }
+  },
+  "skipped_generators": []
+}

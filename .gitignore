@@ -28,3 +28,6 @@ Thumbs.db
 scratch/
 tmp/
 *.log
+
+# logs and run records
+/logs/

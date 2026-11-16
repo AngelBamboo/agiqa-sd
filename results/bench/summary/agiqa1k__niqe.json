@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "niqe",
+  "family": "classical",
+  "meta": {
+    "lower_better": true,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 84.5
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.5694777980144174,
+    "plcc": 0.5849013262850651,
+    "krcc": 0.40091487781338725
+  },
+  "within_mean": 0.2534208397267921,
+  "within_weighted": 0.2428054180393244,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": 0.22169219706535823,
+      "plcc": 0.247831241421689,
+      "krcc": 0.1500918668294987,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": -4.8474220633544025
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.2851494823882259,
+      "plcc": 0.28886859579794916,
+      "krcc": 0.19049721605040795,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": -16.349109228008636
+    }
+  },
+  "skipped_generators": []
+}

@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "brisque",
+  "family": "classical",
+  "meta": {
+    "lower_better": true,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 49.9
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.5073009219890259,
+    "plcc": 0.5370170602912986,
+    "krcc": 0.353858464755113
+  },
+  "within_mean": 0.21460074311761995,
+  "within_weighted": 0.17020124230170683,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": 0.08189420189775774,
+      "plcc": 0.06344376367618763,
+      "krcc": 0.05526244654122257,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": -20.020216030544706
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.34730728433748215,
+      "plcc": 0.3388091925148581,
+      "krcc": 0.2339171777565047,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": -86.78216646242275
+    }
+  },
+  "skipped_generators": []
+}

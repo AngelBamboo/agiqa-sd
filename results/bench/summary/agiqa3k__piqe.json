@@ -1,0 +1,86 @@
+{
+  "dataset": "agiqa3k",
+  "model": "piqe",
+  "family": "classical",
+  "meta": {
+    "lower_better": true,
+    "n_scored": 2982,
+    "n_failed": 3,
+    "failures": [
+      {
+        "key": "DALLE2_normal_253.jpg",
+        "error": "ValueError: metric returned a non-finite score"
+      },
+      {
+        "key": "glide_normal_101.jpg",
+        "error": "ValueError: metric returned a non-finite score"
+      },
+      {
+        "key": "glide_normal_263.jpg",
+        "error": "ValueError: metric returned a non-finite score"
+      }
+    ],
+    "seconds": 50.1
+  },
+  "n": 2979,
+  "n_generators": 6,
+  "pooled": {
+    "srcc": 0.333605786304648,
+    "plcc": 0.3832574809501129,
+    "krcc": 0.22363253999212704
+  },
+  "within_mean": 0.2112853454703044,
+  "within_weighted": 0.23120672053873917,
+  "between": -0.08571428571428573,
+  "per_generator": {
+    "AttnGAN": {
+      "n": 300,
+      "srcc": 0.05094135278199958,
+      "plcc": 0.11623364894284009,
+      "krcc": 0.03415715042019915,
+      "mos_mean": 0.98627131423,
+      "score_mean": -43.85735725402832
+    },
+    "DALLE2": {
+      "n": 289,
+      "srcc": 0.1839251894154356,
+      "plcc": 0.2047364403206066,
+      "krcc": 0.12514578293257048,
+      "mos_mean": 2.633383875079585,
+      "score_mean": -40.37036274378688
+    },
+    "glide": {
+      "n": 298,
+      "srcc": 0.09200068518153408,
+      "plcc": 0.09964143085850985,
+      "krcc": 0.06168109102774966,
+      "mos_mean": 1.09971077145302,
+      "score_mean": -63.562444034038776
+    },
+    "midjourney": {
+      "n": 592,
+      "srcc": 0.6128574842720289,
+      "plcc": 0.5756034004075798,
+      "krcc": 0.42230294680246316,
+      "mos_mean": 3.0066774184476355,
+      "score_mean": -48.594025368626056
+    },
+    "sd1.5": {
+      "n": 1200,
+      "srcc": 0.14633776853872948,
+      "plcc": 0.4232811829264912,
+      "krcc": 0.09911395378511785,
+      "mos_mean": 2.75181359954,
+      "score_mean": -40.49748842358589
+    },
+    "xl2.2": {
+      "n": 300,
+      "srcc": 0.18164959263209857,
+      "plcc": 0.2597550066833054,
+      "krcc": 0.12102823904237679,
+      "mos_mean": 3.2982383549700005,
+      "score_mean": -46.572646675109866
+    }
+  },
+  "skipped_generators": []
+}

@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "clipiqa",
+  "family": "clip",
+  "meta": {
+    "lower_better": false,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 18.7
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.31141313500871093,
+    "plcc": 0.3917102697890836,
+    "krcc": 0.21295647324259198
+  },
+  "within_mean": 0.25765649542618446,
+  "within_weighted": 0.18144835288699315,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": 0.02987647936029128,
+      "plcc": 0.038249101134782866,
+      "krcc": 0.020017980988977512,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": 0.6887183040380478
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.48543651149207767,
+      "plcc": 0.4989427372155594,
+      "krcc": 0.33667775379426707,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": 0.5623482894930667
+    }
+  },
+  "skipped_generators": []
+}

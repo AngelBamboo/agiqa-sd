@@ -1,0 +1,86 @@
+{
+  "dataset": "agiqa3k",
+  "model": "brisque",
+  "family": "classical",
+  "meta": {
+    "lower_better": true,
+    "n_scored": 2982,
+    "n_failed": 3,
+    "failures": [
+      {
+        "key": "DALLE2_normal_253.jpg",
+        "error": "AssertionError: Expected image with non zero variance of pixel values"
+      },
+      {
+        "key": "glide_normal_101.jpg",
+        "error": "AssertionError: Expected image with non zero variance of pixel values"
+      },
+      {
+        "key": "glide_normal_263.jpg",
+        "error": "AssertionError: Expected image with non zero variance of pixel values"
+      }
+    ],
+    "seconds": 235.3
+  },
+  "n": 2979,
+  "n_generators": 6,
+  "pooled": {
+    "srcc": 0.4970498263943525,
+    "plcc": 0.5387697314578932,
+    "krcc": 0.3370673011973559
+  },
+  "within_mean": 0.340703579315528,
+  "within_weighted": 0.3533003339563122,
+  "between": 0.5428571428571429,
+  "per_generator": {
+    "AttnGAN": {
+      "n": 300,
+      "srcc": 0.1626840979637824,
+      "plcc": 0.2795963564491108,
+      "krcc": 0.10774013590057588,
+      "mos_mean": 0.98627131423,
+      "score_mean": -38.97092163085937
+    },
+    "DALLE2": {
+      "n": 289,
+      "srcc": 0.22015616527403145,
+      "plcc": 0.27201291106852943,
+      "krcc": 0.14805734336433973,
+      "mos_mean": 2.633383875079585,
+      "score_mean": -29.365119274099804
+    },
+    "glide": {
+      "n": 298,
+      "srcc": 0.5161292151153212,
+      "plcc": 0.530631053189127,
+      "krcc": 0.3570629726943631,
+      "mos_mean": 1.09971077145302,
+      "score_mean": -71.80945725408976
+    },
+    "midjourney": {
+      "n": 592,
+      "srcc": 0.6766277555014732,
+      "plcc": 0.6523418070699004,
+      "krcc": 0.459039860518291,
+      "mos_mean": 3.0066774184476355,
+      "score_mean": -42.693820025469805
+    },
+    "sd1.5": {
+      "n": 1200,
+      "srcc": 0.2723265819219097,
+      "plcc": 0.4711399952189148,
+      "krcc": 0.18470044246261422,
+      "mos_mean": 2.75181359954,
+      "score_mean": -26.54901227315267
+    },
+    "xl2.2": {
+      "n": 300,
+      "srcc": 0.19629766011665006,
+      "plcc": 0.24538357332382016,
+      "krcc": 0.13486258790046557,
+      "mos_mean": 3.2982383549700005,
+      "score_mean": -24.816289469401042
+    }
+  },
+  "skipped_generators": []
+}

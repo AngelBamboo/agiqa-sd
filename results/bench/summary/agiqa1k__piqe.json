@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "piqe",
+  "family": "classical",
+  "meta": {
+    "lower_better": true,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 15.5
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.26435238049979093,
+    "plcc": 0.3545447273897982,
+    "krcc": 0.17991615470601685
+  },
+  "within_mean": 0.1360437236696261,
+  "within_weighted": 0.10299329652942016,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": 0.03725865196801329,
+      "plcc": 0.07423936634876224,
+      "krcc": 0.024481185653056448,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": -36.96785395344099
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.23482879537123894,
+      "plcc": 0.3795485188125272,
+      "krcc": 0.1608444469161647,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": -50.74092812923336
+    }
+  },
+  "skipped_generators": []
+}

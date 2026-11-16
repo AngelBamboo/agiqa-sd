@@ -1,0 +1,22 @@
+{
+  "dataset": "aigciqa2023",
+  "model": "ridge",
+  "family": "linear",
+  "meta": {
+    "kind": "trained",
+    "n_logo": 2400
+  },
+  "logo": {
+    "within_mean": 0.4526367371780728,
+    "per_generator": {
+      "Controlnet": 0.4799444996531228,
+      "DALLE": 0.24940357046310804,
+      "Glide": 0.36593253707835666,
+      "Lafite": 0.24946543415896347,
+      "Unidiffuser": 0.6749550934693341,
+      "stable-diffusion": 0.6961192882455515
+    },
+    "n_folds": 6
+  },
+  "source_disjoint": 0.4526367371780728
+}

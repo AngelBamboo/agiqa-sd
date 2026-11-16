@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "musiq",
+  "family": "transformer",
+  "meta": {
+    "lower_better": false,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 21.7
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.4074634449942652,
+    "plcc": 0.5388714154285061,
+    "krcc": 0.28017793718363465
+  },
+  "within_mean": 0.23203145781963663,
+  "within_weighted": 0.1285551474468405,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": -0.07725092138326371,
+      "plcc": -0.059915382611630486,
+      "krcc": -0.05095557128744412,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": 71.90408867200216
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.541313837022537,
+      "plcc": 0.5853083627867783,
+      "krcc": 0.3808843090095323,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": 49.194462964793765
+    }
+  },
+  "skipped_generators": []
+}

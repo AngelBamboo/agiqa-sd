@@ -1,0 +1,41 @@
+{
+  "dataset": "agiqa1k",
+  "model": "cnniqa",
+  "family": "cnn",
+  "meta": {
+    "lower_better": false,
+    "n_scored": 1079,
+    "n_failed": 0,
+    "failures": [],
+    "seconds": 97.5
+  },
+  "n": 1079,
+  "n_generators": 2,
+  "pooled": {
+    "srcc": 0.14694011167947352,
+    "plcc": 0.3616928244622409,
+    "krcc": 0.09672109388563635
+  },
+  "within_mean": 0.23266605656149844,
+  "within_weighted": 0.155234992323118,
+  "between": null,
+  "per_generator": {
+    "deepai": {
+      "n": 720,
+      "srcc": 0.0012308257769762384,
+      "plcc": 0.03042631959024287,
+      "krcc": 0.001852503512060785,
+      "mos_mean": 2.9662247474875003,
+      "score_mean": 0.6535844367825323
+    },
+    "dreamStudio": {
+      "n": 359,
+      "srcc": 0.46410128734602063,
+      "plcc": 0.5406076246696895,
+      "krcc": 0.32126052101456604,
+      "mos_mean": 2.0426690301169916,
+      "score_mean": 0.6044750054649656
+    }
+  },
+  "skipped_generators": []
+}
